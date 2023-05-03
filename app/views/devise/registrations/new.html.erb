@@ -1,0 +1,47 @@
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+</style>
+<%= stylesheet_link_tag "login.css" %>
+<div class ="center">
+  <%= link_to "Back", :back, class: "back-link" %>
+  <h1>Sign up</h1>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <div class="txt_field">
+     <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+     <span></span>
+     <%= f.label :email %><br />
+  </div>
+
+  <div class="txt_field">
+    <%= f.password_field :password, autocomplete: "new-password" %>
+    <span></span>
+    <%= f.label :password %>
+  </div>
+
+
+  <div class="txt_field">
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <span></span>
+    <%= f.label :password_confirmation %><br />
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Sign up" %>
+  </div>
+<% end %>
+
+  <div class="signup_link">
+    Already have an account? <%= link_to "Login", new_session_path(resource_name) %>
+  </div>
+
+  <%- if devise_mapping.omniauthable? %>
+  <%- resource_class.omniauth_providers.each do |provider| %>
+  <div class="button_to">
+    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false },  class: "google-btn" %><br />
+  </div>
+  <% end %>
+<% end %>
+</div>

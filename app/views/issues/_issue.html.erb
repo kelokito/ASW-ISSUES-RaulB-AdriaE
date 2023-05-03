@@ -1,0 +1,37 @@
+<tr id="<%= dom_id issue %>" class="row table-main" style="background-color:#f2f2f2;">
+	<td class="level-field">
+		<div class="level" title="<%= issue.typeIssue %>" style="background-color: <%= get_issue_type_color(issue.typeIssue) %>;"></div>
+	</td>
+	<td class="level-field">
+		<div class="level" title="<%= issue.severityIssue %>" style="background-color: <%= get_issue_severity_color(issue.severityIssue) %>;"></div>
+	</td>
+	<td class="level-field">
+		<div class="level" title="<%= issue.priorityIssue %>" style="background-color: <%= get_issue_priority_color(issue.priorityIssue) %>;"></div>
+	</td>
+	<td class="issue-text">
+		<span class="issue-ref" style="">
+			<p style=" color: #008aa8">
+				#<%= issue.id%> <%= link_to issue.subject, edit_issue_path(issue.id) %><% if issue.due_date.nil? then %> <% else %> <%= image_tag 'clockIcon.png', width: 12, height: 12 %> <%end%> <% if issue.blocked.nil? || !issue.blocked
+				then %> <% else %> <%= image_tag 'lockIcon.png', width: 12, height: 12 %> <%end%>
+			</p>
+		</span>
+	</td>
+	<td class="issue-field" style="">
+		<% status_options = [["New", 0], ["In Progess", 1], ["Ready for test", 2],["Closed", 3], ["Needs info", 4], ["Rejected", 5],["Postponed",6]] %>
+		<% selected_option = status_options.find { |option| option[1] == issue.statusIssue } %>
+		<span class="issue-status-bind" title="New" style="">
+    <%= selected_option.nil? ? "Unknown" : selected_option[0] %><%= image_tag "arrowdownIcon.png", size: "12x12" %>
+	</td>
+	<td class="modified-field" style="">
+		<span class="modified-field"><%= issue.updated_at.strftime("%d/%m/%Y") %></span>
+	</td>
+	<td class="avatar" style="">
+		<% if issue.user_id.nil? then %>
+			<%= link_to issue_assigned_path(issue) do %><%= image_tag 'assignIcon.png', width: 32, height: 32 %><% end %>
+		<% else %>
+			<%= link_to issue_assigned_path(issue) do %><%= image_tag 'exampleavatarIcon.png', width: 32, height: 32 %><% end %>
+		<% end %>
+
+	</td>
+</tr>
+<th></th>

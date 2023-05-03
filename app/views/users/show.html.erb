@@ -1,0 +1,57 @@
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+</style>
+<%= stylesheet_link_tag "profile.css" %>
+<p style="color: green"><%= notice %></p>
+<%= link_to 'Go to Issues', issues_path, class: "back-link"  %>
+<%= link_to "Back", :back, class: "back-link" %>
+
+<div class="card">
+  <h1>Profile from <%= @user.full_name %></h1>
+  <p>
+    <%= image_tag(@user.avatar, size: "100x100") if @user.avatar.present? %>
+  </p>
+  <p>Email: <%= @user.email %></p>
+  <p>Bio: <%= @user.bio %></p>
+  </div>
+
+
+  <% if @user.present? %>
+
+  <div style="display:flex;">
+    <div class="interactions-container">
+      <h3 style="text-align: center;">Timeline</h3>
+      <% if @user.activities.present? %>
+        <% @user.activities.order(created_at: :desc).each do |activity| %>
+          <div style="display: flex; align-items: center;">
+            <strong><%= activity.issue.subject %></strong>
+            <div style=" margin-left:30px;">
+              <%= render partial: 'activities/activity', locals: { activity: activity } %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p style="text-align: center;">No hay interacciones por el momento</p>
+      <% end %>
+    </div>
+
+    <div class="issues-wathed-container">
+      <h3 style="text-align: center;">Issues Watched</h3>
+      <% if @watchers.present? %>
+        <ul>
+          <% @watchers.each do |watcher| %>
+            <h4 style="text-align: center; text-decoration:none;">Issue <%= watcher.issue_id %></h4>
+          <% end %>
+        </ul>
+      <% else %>
+        <p style="text-align: center;">No se encontraron issues vistas para este usuario.</p>
+      <% end %>
+
+
+    <% else %>
+      <p>No se encontró el usuario.</p>
+    <% end %>
+    </div>
+
+  </div>
+

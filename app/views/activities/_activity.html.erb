@@ -1,0 +1,22 @@
+<%= stylesheet_link_tag "activity.css" %>
+<article>
+    <div class="activity-container">
+    <%= image_tag(activity.user.avatar, size: "60x60", class:"activity-avatar") if activity.user.avatar.present? %>
+    <div class="activity-main">
+      <div class="activity-data">
+        <span class="activity-creator">
+          <%= activity.user.full_name %>
+        </span>
+        <span class="activity-date">
+          <%= activity.created_at.strftime("%d %b %Y %H:%M")  %>
+        </span>
+      </div>
+      <div class="activity-text-container">
+        <p>
+          <span class="activity-action"> <%= activity.action %></span>
+          <span class="activity-description"> <%= activity.description %></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</article>

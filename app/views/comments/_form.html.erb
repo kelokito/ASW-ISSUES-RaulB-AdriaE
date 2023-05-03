@@ -1,0 +1,7 @@
+<%= stylesheet_link_tag "comments.css" %>
+<%= form_with(model: [@issue, @issue.comments.build], local: true, class:"comments-new-container") do |form| %>
+  <div class="comments-new-container">
+    <%= form.text_field :content, rows: 3, class:'comments-write-text', placeholder: 'Type a new comment here'%>
+    <%= form.submit 'SAVE', class: 'comments-submit-button' %>
+  </div>
+<% end %>

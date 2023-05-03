@@ -1,0 +1,564 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+
+body {
+    font-family: 'Ubuntu-Regular', sans-serif;
+    line-height: 1.25;
+    min-height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    font-family: 'Ubuntu-Regular', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Ubuntu-Regular', sans-serif;
+}
+
+div {
+    display: block;
+}
+
+/*FORM DIV CONTAINER*/
+.lightbox.open {
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity .3s ease;
+    font-family: Ubuntu-Regular, Arial, Helvetica, sans-serif;
+}
+
+.lightbox-create-edit {
+    z-index: 99;
+}
+
+.lightbox {
+    background: rgba(255, 255, 255, .95);
+    bottom: 0;
+    display: none;
+    left: 0;
+    position: relative;
+    opacity: 0;
+    right: 0;
+    top: 0;
+    z-index: 0;
+}
+
+/*NEW ISSUE*/
+.lightbox .title {
+    text-align: center;
+}
+
+.lightbox h2 {
+    font-size: 1.7rem;
+    font-family: Ubuntu-Regular, Arial, Helvetica, sans-serif;
+}
+
+h2 {
+    font-size: 1.4rem;
+    font-family: Ubuntu-Regular, Arial, Helvetica, sans-serif;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #2e3440;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.new-issue-subject,
+.new-issue-description {
+    background: #fff;
+    border: 2px solid #d8dee9;
+    border-radius: 3px;
+    color: #4c566a;
+    margin: 0;
+    padding: .3rem 1rem .3rem .95rem;
+    width: 100%;
+    font-family: inherit;
+    line-height: normal;
+}
+
+input[type=text],
+textarea {
+    background: #fff;
+    border: 2px solid #d8dee9;
+    border-radius: 3px;
+    color: #4c566a;
+    margin: 0;
+    padding: .3rem 1rem .3rem .95rem;
+    width: 100%;
+}
+
+.new-issue-description {
+    min-height: 13rem;
+    resize: vertical;
+    overflow: auto;
+}
+
+.new-issue-submit {
+    background-color: #008aa8;
+    color: #fff;
+    width: 100%;
+    padding: .75rem 1.5rem;
+    font-size: .875rem;
+    align-items: center;
+    background-color: #83eede;
+    border: 0;
+    border-radius: 4px;
+    color: #2e3440;
+    display: inline-flex;
+    justify-content: center;
+    line-height: initial;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font: inherit;
+    margin: 0;
+    overflow: visible;
+    text-decoration: none;
+}
+
+/*New Issue Page*/
+
+.new-issue-subject {
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 420px;
+}
+
+.new-issue-submit:hover {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    background-color: #008AA8;
+    border: none;
+
+
+}
+
+.ticket-data {
+    background: #f9f9fb;
+    flex-basis: 300px;
+    max-width: 300px;
+    padding: 1rem;
+}
+
+.ticket-section:not(:last-child) {
+    border-bottom: 1px solid #a9aabc;
+}
+
+.ticket-section {
+    border-bottom: 1px solid #a9aabc;
+    padding: 1.2rem 0;
+    width: 100%;
+}
+
+.ticket-data-container {
+    font-size: .875rem;
+    font-family: Ubuntu-Regular, Arial, Helvetica, sans-serif;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+ .level {
+   background-color: #70728f;
+   border-radius: 9px;
+   height: 18px;
+   margin: 0 auto;
+   width: 18px;
+ }
+
+.ticket-status .type-data {
+    align-content: center;
+    background: #f9f9fb;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    position: relative;
+    width: 100%;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.ticket-status .type-data .level-name {
+    font-size: .7rem;
+    align-self: center;
+    color: #70728f;
+}
+
+.ticket-status .level-name {
+    color: #70728f;
+    text-transform: lowercase;
+}
+
+.ticket-status .type-data .level-data {
+    font-size: .875rem;
+    align-items: center;
+    color: #4c566a;
+    display: flex;
+    padding-left: 0.5rem;
+    text-align: right;
+}
+
+.ticket-status .severity-data {
+    align-content: center;
+    background: #f9f9fb;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    position: relative;
+    width: 100%;
+}
+
+.ticket-status .priority-data {
+    align-content: center;
+    background: #f9f9fb;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    position: relative;
+    width: 100%;
+}
+
+.ticket-status .priority-data .level-data {
+    font-size: .875rem;
+    align-items: center;
+    color: #4c566a;
+    display: flex;
+    padding-left: 0.5rem;
+    text-align: right;
+}
+
+.ticket-status .severity-data .level-data {
+    font-size: .875rem;
+    align-items: center;
+    color: #4c566a;
+    display: flex;
+    padding-left: 0.5rem;
+    text-align: right;
+}
+
+.ticket-header .ticket-title {
+    font-size: 1.4rem;
+    font-family: Ubuntu-Regular, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    vertical-align: sub;
+}
+
+.ticket-header .detail-status-inner>span {
+    color: #fff;
+    display: flex;
+    padding: 0.15rem 0.25rem;
+    text-transform: uppercase;
+}
+
+.ticket-header .detail-status-inner {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.ticket-header .detail-status {
+    font-size: .875rem;
+    display: flex;
+    margin-left: 0.5rem;
+    position: relative;
+}
+
+.ticket-header {
+    align-items: center;
+    display: flex;
+    margin: 0.75rem 0;
+    position: relative;
+}
+
+.wrapper {
+    display: flex;
+    height: 100%;
+    min-height: calc(100vh - 48px);
+    margin-left: auto;
+    margin-right: 0;
+}
+
+body {
+    font-family: Ubuntu-Regular, Arial, Helvetica, sans-serif;
+    line-height: 1.25;
+    min-height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.main {
+    margin: auto;
+    margin-right: 0;
+}
+
+.ticket-section-label {
+    font-size: .7rem;
+    font-family: Ubuntu-Medium, Arial, Helvetica, sans-serif;
+    color: #2e3440;
+    display: block;
+    -webkit-margin-after: 0.25rem;
+    margin-block-end: 0.25rem;
+    text-transform: uppercase;
+}
+
+.ticket-user-list-container {
+    position: relative;
+}
+
+.ticket-users-actions .ticket-users-action {
+    background: #fff;
+    color: #5a5b72;
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1;
+    font-size: .9rem;
+    justify-content: center;
+    line-height: 2rem;
+    margin: 0 0.25rem;
+    text-align: center;
+}
+
+.ticket-detail-settings {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.ticket-detail-settings [class^=btn-]:not(.select-option):not(.show-closed) {
+    background: #eceff4;
+    color: #008aa8;
+    -webkit-margin-end: 0.5rem;
+    margin-inline-end: 0.5rem;
+    padding: 0.75rem;
+}
+
+.due-date-button {
+    background: #eceff4;
+    cursor: pointer;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+}
+
+.ticket-detail-settings [class^=btn-]:not(.select-option):not(.show-closed) {
+    background: #eceff4;
+    color: #008aa8;
+    -webkit-margin-end: 0.5rem;
+    margin-inline-end: 0.5rem;
+    padding: 0.75rem;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+}
+
+button,
+button:active,
+button:focus {
+    border: 0;
+}
+
+.btn-big tg-svg,
+.btn-board tg-svg,
+.btn-filter tg-svg,
+.btn-icon tg-svg,
+.btn-small tg-svg {
+    fill: currentColor;
+}
+
+button,
+html input[type=button],
+input[type=reset],
+input[type=submit] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+.ticket-user-list .user-list-single {
+    align-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0.25rem 0;
+    width: 100%;
+}
+
+.ticket-user-list .user-list-avatar {
+    flex-basis: 3rem;
+    margin-right: 0.25rem;
+    max-height: 3rem;
+    max-width: 3rem;
+}
+
+.ticket-user-list .user-list-avatar img {
+    width: 100%;
+}
+
+.ticket-user-list .user-list-name {
+    flex-grow: 1;
+    margin-left: 0.5rem;
+    font-family: 'Ubuntu-Regular', sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+.comments-activitties-buttons{
+    display:flex;
+    background-color: rgb(240,240,240);
+    padding:10px;
+}
+
+.comments-button,
+.activities-button {
+    font-size: 16px;
+    font-family: Ubuntu-Medium,Arial,Helvetica,sans-serif;
+    border-bottom: 3px solid transparent;
+    color: rgb(0,0,0);
+    transition: all .1s linear;
+}
+
+.comments-button:hover,
+.activities-button:hover {
+    color: #25a28c;
+}
+
+
+.new-issue-submit2{
+    background-color: #008aa8;
+    color: #fff;
+    width: 100%;
+    padding: .75rem 1.5rem;
+    font-size: .875rem;
+    align-items: center;
+    background-color: #83eede;
+    border: 0;
+    border-radius: 4px;
+    color: #2e3440;
+    display: inline-flex;
+    justify-content: center;
+    line-height: initial;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font: inherit;
+    margin: 0;
+    overflow: visible;
+    text-decoration: none;
+}

@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag "bulk.css" %>
+<div class="new-issue-container">
+	<div class="container-page">
+		<!-- C-->
+		<div class="close-issue">
+			&times;
+		</div>
+		<div class="lightbox lightbox-generic-form lightbox-create-edit open" style="display:flex;">
+			<div class="main">
+				<div>
+					<h2 class="title">
+						<% if @issue.blocked.nil? || !@issue.blocked then %> <% @submitTitle = "Blocking issue" %> <% else %> <% @submitTitle = "Unblocking issue" %> <%end%>
+						<span><%= @submitTitle %></span>
+					</h2>
+				</div>
+
+				<%= render "block", issue: @issue %>
+				<div class="back-to-issues">
+					<%= link_to "Back", edit_issue_path(@issue), class:"new-issue-submit" %>
+				</div>
+			</div>
+		</div>
+		<br />
+	</div>
+</div>

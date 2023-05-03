@@ -1,0 +1,27 @@
+<%= form_with(model: watcher) do |form| %>
+  <% if watcher.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(watcher.errors.count, "error") %> prohibited this watcher from being saved:</h2>
+
+      <ul>
+        <% watcher.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :issue_id, style: "display: block" %>
+    <%= form.number_field :issue_id %>
+  </div>
+
+  <div>
+    <%= form.label :user_id, style: "display: block" %>
+    <%= form.number_field :user_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

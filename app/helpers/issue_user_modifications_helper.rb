@@ -1,0 +1,2 @@
+module IssueUserModificationsHelper
+end

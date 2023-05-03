@@ -1,0 +1,294 @@
+ /*Containers*/
+ @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+
+ .issue-main {
+   padding-left: 2rem;
+ }
+
+ .main {
+   flex: 1;
+   min-width: 0;
+   padding: 1rem;
+ }
+
+ a,
+ abbr,
+ acronym,
+ address,
+ applet,
+ article,
+ aside,
+ audio,
+ b,
+ big,
+ blockquote,
+ body,
+ canvas,
+ caption,
+ center,
+ cite,
+ code,
+ dd,
+ del,
+ details,
+ dfn,
+ div,
+ dl,
+ dt,
+ em,
+ embed,
+ fieldset,
+ figcaption,
+ figure,
+ footer,
+ form,
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6,
+ header,
+ hgroup,
+ html,
+ i,
+ iframe,
+ img,
+ ins,
+ kbd,
+ label,
+ legend,
+ li,
+ mark,
+ menu,
+ nav,
+ object,
+ ol,
+ output,
+ p,
+ pre,
+ q,
+ ruby,
+ s,
+ samp,
+ section,
+ small,
+ span,
+ strike,
+ strong,
+ sub,
+ summary,
+ sup,
+ table,
+ tbody,
+ td,
+ tfoot,
+ th,
+ thead,
+ time,
+ tr,
+ tt,
+ u,
+ ul,
+ var,
+ video {
+   margin: 0;
+   padding: 0;
+   border: 0;
+   font-size: 100%;
+   font: inherit;
+   vertical-align: baseline;
+   font-family: 'Ubuntu', sans-serif;
+ }
+
+ * {
+   box-sizing: border-box;
+ }
+
+ .container-page {
+   display: block;
+   justify-content: center;
+   font-family: 'Ubuntu', sans-serif;
+   margin: 30px;
+ }
+
+
+ /*Titles*/
+ .issues-title {
+   font-family: 'Ubuntu', sans-serif;
+   font-size: 27px;
+   vertical-align: baseline;
+   color: #008AA8;
+ }
+
+ .issues-title:hover {
+   font-family: 'Ubuntu', sans-serif;
+   font-size: 27px;
+   vertical-align: baseline;
+   color: #008AA8;
+   text-decoration: none;
+ }
+
+ /*Main page*/
+
+ .taskboard-actions {
+   display: flex;
+   justify-content: space-between;
+   margin: 20px;
+   padding: 10px
+ }
+
+ .issue-table-options-start {
+   display: flex;
+ }
+
+ .display-tags-button {
+   display: flex;
+ }
+
+ .new-issue-button {
+   display: flex;
+   margin-right: 10px;
+ }
+
+ .searchDiv {
+   box-sizing: border-box;
+   border: 3px solid #d8dee9;
+   margin-right: 2px;
+   margin-left: 2px;
+ }
+
+ .searchInputField {
+   border: 0px solid;
+ }
+
+ .searchInputField:focus {
+   outline: none;
+ }
+
+ .searchIcon {
+   margin-right: 1rem;
+ }
+
+ .btn-icon {
+   margin-left: .5rem;
+   margin-right: .5rem;
+ }
+
+ #newissuebtn {
+   background-color: #83eede;
+   color: #2e3440;
+   border: 0px;
+   border-radius: 4px;
+ }
+
+ /*ISSUES CONTAINER*/
+
+ .issue-container {
+   display: flex;
+ }
+
+ .issues-page {
+   width: 100%;
+ }
+
+ article,
+ aside,
+ details,
+ figcaption,
+ figure,
+ footer,
+ header,
+ hgroup,
+ menu,
+ nav,
+ section {
+   display: block;
+ }
+
+ .issues-table {
+   margin-bottom: 2rem;
+ }
+
+ .basic-table {
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+ }
+
+ .issues-table .row:not(.title) {
+   font-size: .875rem;
+   background: #f9f9fb;
+   border-bottom: none;
+   border-radius: 3px;
+   color: #70728f;
+   margin-bottom: .75rem;
+   padding: .6rem;
+ }
+
+ #headerTable {
+   margin-bottom: 10em;
+ }
+
+ .level {
+   background-color: #70728f;
+   border-radius: 9px;
+   height: 18px;
+   margin: 0 auto;
+   width: 18px;
+ }
+
+ a {
+   text-decoration: none;
+   color: #2e3440;
+ }
+
+ a:hover {
+   color: blue;
+ }
+
+ td {
+   text-align: center;
+   vertical-align: middle;
+ }
+
+ table,
+ td {
+   border-collapse: separate;
+   border-spacing: 0px 5px;
+ }
+
+
+ .notice {
+   font-size: 1.1rem;
+   font-family: Ubuntu-Medium, Arial, Helvetica, sans-serif;
+   line-height: 1.2;
+   color: #fff;
+   background: rgba(92, 186, 169, .95);
+   box-shadow: 0 25px 10px -15px rgba(0, 0, 0, .05);
+   right: -370px;
+   top: 2%;
+   transition: opacity .2s ease-in;
+   width: 100%;
+   text-align: center;
+ }
+
+
+/*User top info*/
+.user-info{
+ text-align: right;
+}
+
+.logout-button {
+  background-color: #dd4b39;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}

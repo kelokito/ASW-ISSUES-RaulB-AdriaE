@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag "bulk.css" %>
+<div class="new-issue-container">
+	<div class="container-page">
+		<!-- C-->
+		<div class="close-issue">
+			&times;
+		</div>
+		<div class="lightbox lightbox-generic-form lightbox-create-edit open" style="display:flex;">
+			<div class="main">
+				<div>
+					<h2 class="title">
+						<span>Set due date</span>
+					</h2>
+				</div>
+
+				<%= render "dueDate", issue: @issue %>
+				<div class="back-to-issues">
+					<%= link_to "Back", edit_issue_path(@issue), class:"new-issue-submit" %>
+				</div>
+			</div>
+		</div>
+		<br />
+	</div>
+</div>

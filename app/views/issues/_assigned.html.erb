@@ -1,0 +1,44 @@
+<%= stylesheet_link_tag "new_issue.css" %>
+
+<%= form_for @issue, :url => {:action => "updateAssigned"} do |form| %> <% if issue.errors.any? %>
+<div style="color: red">
+	<!-- <h2><#%= pluralize(issue.errors.count, "error") %> prohibited this issue from being saved:</h2> -->
+
+	<ul>
+		<% issue.errors.each do |error| %>
+		<li><%= error.full_message %></li>
+		<% end %>
+	</ul>
+</div>
+<% end %>
+
+<div class="lb-user-list lb-select-user-list">
+	<!-- @watchersArray s'hauria de substituir per la llista de usernames -->
+	<% User.all.each do |user| %>
+	<div class="" style="">
+		<!---->
+		<div class="user-list-item" role="button" tabindex="0" style="">
+			<div class="user-list-avatar">
+				<% if user.avatar.present? %>
+						<%= image_tag(user.avatar, size: "50x50") %>
+				<% else %>
+					<%= image_tag "exampleavatarIcon.png"%>
+    		<% end %>
+				<!----><!---->
+				<!---->
+			</div>
+			<!---->
+			<!---->
+			<div class="user-list-name" style=""><span class="users"><%= user.full_name %></span></div>
+			<!---->
+			<% @userAssigned = Issue.find_by(id: @issue.id, user_id: user.id)%>
+			<% if (@userAssigned.nil?) then %> <%= form.button 'ASSIGN', value: user.email, name: "Usuario",class: 'add-watcher-submit', type: 'submit' %> <% else %> <%= form.button 'UNASSIGN', value: user.email,
+			name: "Usuario",class: 'remove-watcher-submit', type: 'submit', multiple: true %> <% end%>
+			<!---->
+		</div>
+		<!---->
+	</div>
+	<% end %>
+</div>
+
+<% end %>

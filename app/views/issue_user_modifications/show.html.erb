@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @issue_user_modification %>
+
+<div>
+  <%= link_to "Edit this issue user modification", edit_issue_user_modification_path(@issue_user_modification) %> |
+  <%= link_to "Back to issue user modifications", issue_user_modifications_path %>
+
+  <%= button_to "Destroy this issue user modification", @issue_user_modification, method: :delete %>
+</div>

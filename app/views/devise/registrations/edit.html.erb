@@ -1,0 +1,49 @@
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+</style>
+<%= stylesheet_link_tag "profile.css" %>
+
+<%= link_to "Back", :back, class: "back-link" %>
+
+<div class="card">
+<h1>Edit <%= resource_name.to_s.humanize %></h1>
+
+
+  <%= form_for @user, html: { multipart: true } do |f| %>
+  <h2><%= @user.full_name %></h2>
+  <br />
+  <p>
+    <%= image_tag(@user.avatar, size: "100x100") if @user.avatar.present? %>
+  </p>
+  <br />
+  <%= f.file_field :avatar, class: 'form-control' %>
+  <br />
+  <br />
+  <%= f.submit 'Save avatar', class: 'btn btn-primary' %>
+  <br />
+  <br />
+  <br />
+  <h2>Bio</h2>
+  <%= f.text_area :bio, rows: 6, cols: 50, class: 'form-control'%>
+  <br />
+  <%= f.submit 'Save bio', class: 'btn btn-primary' %>
+  <br />
+
+  <% end %>
+
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+
+<% end %>
+
+<br />
+
+
+
+
+<div><%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "button-cancel-account" %></div>
+
+
+</div>

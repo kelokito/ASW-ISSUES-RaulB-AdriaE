@@ -1,0 +1,32 @@
+<%= stylesheet_link_tag "issues_index.css" %>
+
+<%= form_tag "/issues", method: "GET" do %>
+	<button class="btn-filter" type="submit">
+		<%= image_tag "filterIcon.png", size: "12x12" %>
+		<span class="text" sIStyle="color: #008aa8;">Filters</span>
+	</button>
+
+	<%= image_tag 'status.png', width: 12, height: 12 %>
+	<%= select_tag :filter_by_status, options_for_select([["None",nil],["New", 0], ["In Progess", 1], ["Ready for test", 2],["Closed", 3], ["Needs info", 4], ["Rejected", 5],["Postponed",6]],params[:filter_by_status]) %>
+
+  <%= image_tag 'type.png', width: 12, height: 12 %>
+  <%= select_tag :filter_by_type, options_for_select([["None",nil],["Bug", 0], ["Question", 1], ["Enhancement", 2], ["To do", 3]],params[:filter_by_type]) %>
+
+  <%= image_tag 'severity.png', width: 12, height: 12 %>
+  <%= select_tag :filter_by_severity, options_for_select([["None",nil],["Wishlist", 0], ["Minor", 1], ["Normal", 2], ["Important", 3], ["Critical", 4]],params[:filter_by_severity])  %>
+
+  <%= image_tag 'priority.png', width: 12, height: 12 %>
+  <%= select_tag :filter_by_priority, options_for_select([["None",nil],["Low", 0], ["Normal", 1], ["High", 2]],params[:filter_by_priority])  %>
+  <%
+    @usersArray = User.all.collect(&:full_name).to_a
+    @usersArray << ["None",nil]
+    @usersArray = @usersArray.reverse()
+  %>
+  <%= image_tag 'assign.png', width: 24, height: 24 %>
+  <%= select_tag :filter_by_assign, options_for_select(@usersArray,params[:filter_by_assign])  %>
+
+  <%= image_tag 'created.png', width: 24, height: 24 %>
+  <%= select_tag :filter_by_createdBy, options_for_select(@usersArray,params[:filter_by_createdBy])  %>
+  <%= hidden_field_tag :search, params[:search]%>
+
+<% end %>

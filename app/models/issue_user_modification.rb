@@ -1,0 +1,2 @@
+class IssueUserModification < ApplicationRecord
+end

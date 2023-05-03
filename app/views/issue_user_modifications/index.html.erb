@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Issue user modifications</h1>
+
+<div id="issue_user_modifications">
+  <% @issue_user_modifications.each do |issue_user_modification| %>
+    <%= render issue_user_modification %>
+    <p>
+      <%= link_to "Show this issue user modification", issue_user_modification %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New issue user modification", new_issue_user_modification_path %>

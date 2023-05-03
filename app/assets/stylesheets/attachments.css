@@ -1,0 +1,72 @@
+.attachment-save-button{
+  margin: 10px;
+  width: 25px;
+  height: 25px;
+}
+.attachment-save-button:hover{
+  width: 27px;
+  height: 27px;
+}
+.attachment-delete-button{
+  width: 20px;
+  height: 20px;
+}
+.attachment-delete-button:hover{
+  width: 22px;
+  height: 22px;
+}
+
+.attachments-container{
+    display: block;
+}
+
+.attachments-header {
+    width: 500px;
+    align-content: center;
+    align-items: center;
+    background: #eceff4;
+    display: flex;
+    justify-content: space-between;
+    min-height: 36px;
+}
+.attachments-title {
+    font-family: Ubuntu-Medium,Arial,Helvetica,sans-serif;
+    font-size: 1rem;
+    color: #4c566a;
+    line-height: 36px;
+    padding: 0 1rem;
+}
+
+
+.button-add-attachments{
+  width: 145px;
+  background-color: #83eede;
+  color: #2e3440;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-add-attachments:hover{
+  background-color: #008aa8;
+  color: rgb(255,255,255);
+}
+
+.attachments-empty {
+    border: 3px dashed #eceff4;
+    color: #70728f;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    transition: all .2s linear;
+}
+
+.attachments-added {
+    display: flex;
+    justify-content: space-between;
+    color: #008aa8;
+    margin: 5px;
+    text-decoration: none;
+}
+.attachments-added:hover {
+    color: black;
+}

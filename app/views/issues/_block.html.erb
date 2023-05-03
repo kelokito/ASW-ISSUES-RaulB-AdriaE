@@ -1,0 +1,24 @@
+<%= stylesheet_link_tag "new_issue.css" %>
+
+<!--<#%= form_with(model: issue) do |form| %>-->
+<%= form_for @issue, :url => {:action => "updateBlock"} do |form| %> <% if issue.errors.any? %>
+<div style="color: red">
+	<!-- <h2><#%= pluralize(issue.errors.count, "error") %> prohibited this issue from being saved:</h2> -->
+
+	<ul>
+		<% issue.errors.each do |error| %>
+		<li><%= error.full_message %></li>
+		<% end %>
+	</ul>
+</div>
+<% end %>
+
+<div>
+	<% if @issue.blocked.nil? || !@issue.blocked then %> <% @submitTitle = "BLOCK" %> <%= form.text_area :blocked_reason, class: 'new-issue-description', placeholder: "Please explain the reason..."%> <% else %> <% @submitTitle = "UNBLOCK"
+	%> <%end%>
+</div>
+<div>
+	<%= form.submit @submitTitle, class: "new-issue-submit" %>
+</div>
+
+<% end %>

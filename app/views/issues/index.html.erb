@@ -1,0 +1,220 @@
+<p class="notice"><%= notice %></p>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+</style>
+<%= stylesheet_link_tag "issues_index.css" %>
+<section class="main issue-main">
+
+	<div class="user-info">
+		<% if current_user %>
+		<div style="display: inline-block; margin-right: 20px;">
+			<p style="display: inline-block;"><%= image_tag(current_user.avatar, size: "50x50") if current_user.avatar.present? %></p>
+      <h2 style="display: inline-block;"><%= link_to "Mi perfil", user_path(current_user)%></h2>
+      <%= link_to "Edit Account", edit_user_registration_path, style: { display: "inline-block"} %>
+		</div>
+		 <%= button_to "Logout", destroy_user_session_path, method: :delete, data: {turbo: "false"}, class: "logout-button" %>
+      <% else %>
+      <%= link_to "Login", new_user_session_path %>
+      <%= link_to "Create Account", new_user_registration_path %>
+  <% end %>
+	</div>
+
+
+	<div class="issue-top">
+		<header class="issue-header">
+			<header class="container-page">
+				<h1 class="issues-title" tg-main-title="" i18n-section-name="Issues">
+					<span><a href="/issues" class="issues-title" style="text-decoration: none;">Issues</a></span>
+				</h1>
+			</header>
+			<div class="taskboard-actions">
+				<div class="issue-table-options-start" style= "display: block;">
+					<%= render "filter" %>
+					<div class="searchDiv" style="max-width:fit-content;">
+						<%= form_tag root_path(sort_by: :created_at,
+						filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]),
+							method: :get, class: "search-form" do %>
+						<%= hidden_field_tag :sort_by, params[:created_at]%>
+						<%= hidden_field_tag :filter_by_status, params[:filter_by_status]%>
+						<%= hidden_field_tag :filter_by_severity, params[:filter_by_severity]%>
+						<%= hidden_field_tag :filter_by_priority, params[:filter_by_priority]%>
+						<%= hidden_field_tag :filter_by_createdBy, params[:filter_by_createdBy]%>
+						<%= hidden_field_tag :filter_by_assign, params[:filter_by_assign]%>
+    				<%= text_field_tag :search, params[:search], class: "searchInputField", placeholder: "subject or reference" %>
+						<%= image_tag "searchIcon.png", size: "12x12" , class: "searchIcon"%>
+						<%end%>
+					</div>
+					<div id="show-tags" class="display-tags-button">
+						<div class="check js-check active">
+							<input type="checkbox" id="show-tags-input" class="ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false" />
+						</div>
+						<label>Tags</label>
+					</div>
+				</div>
+				<div class="new-issue-button">
+					<button type="button" variant="primary" id="newissuebtn" class="btn-small">
+						<%= link_to new_issue_path do%> <%= image_tag 'sumIcon.png', width: 12, height: 12%>
+						<span>NEW ISSUE</span>
+						<% end %>
+					</button>
+					<button type="button" variant="secondary" class="btn-icon">
+						<%= link_to bulk_issue_path do%> <%= image_tag 'bulkaddIcon.png', width: 12, height: 12%> <% end %>
+					</button>
+				</div>
+			</div>
+		</header>
+	</div>
+
+	<div class="issue-container">
+		<section class="issues-page">
+			<section class="issues-table basic-table">
+				<table id="issues" style="width:98%; margin-left: 1em; margin-right: 1em;">
+					<% if @issues.empty? %> <%= image_tag "empty_moon.png"%>
+					<p class="title">There are no issues to report :-)</p>
+					<a class="">Did you find an issue?</a>
+					<% else %>
+					<tr class="row title" id="headerTable">
+						<th class="mobile">
+							<div>
+							<%= link_to "TYPE", root_path(sort_by: :typeIssue,
+							filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+							<% if session[:sort_order] == 'asc' && params[:sort_by]=='typeIssue' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='typeIssue'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+						<th class="mobile">
+							<div>
+							<%= link_to "SEVERITY", root_path(sort_by: :severityIssue,
+							filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+							<% if session[:sort_order] == 'asc' && params[:sort_by]=='severityIssue' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='severityIssue'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+						<th class="mobile">
+							<div>
+							<%= link_to "PRIORITY", root_path(sort_by: :priorityIssue,
+							filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+							<% if session[:sort_order] == 'asc' && params[:sort_by]=='priorityIssue' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='priorityIssue'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+						<th class="mobile">
+							<div>
+						<%= link_to "ISSUE", root_path(sort_by: :created_at,
+						filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+						<% if session[:sort_order] == 'asc' && params[:sort_by]=='created_at' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='created_at'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+						<th class="mobile">
+							<div>
+							<%= link_to "STATUS", root_path(sort_by: :statusIssue,
+							filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+							<% if session[:sort_order] == 'asc' && params[:sort_by]=='statusIssue' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='statusIssue'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+						<th class="mobile"><div>
+						<%= link_to "MODIFIED", root_path(sort_by: :updated_at,
+						  filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+						<% if session[:sort_order] == 'asc' && params[:sort_by]=='updated_at' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='updated_at'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+						<th class="mobile"><div>
+							<%= link_to "ASSIGN TO", root_path(sort_by: :user_id,
+							filter_by_status: params[:filter_by_status],
+							filter_by_type: params[:filter_by_type],
+							filter_by_severity: params[:filter_by_severity],
+							filter_by_priority: params[:filter_by_priority],
+							filter_by_createdBy: params[:filter_by_createdBy],
+							filter_by_assign: params[:filter_by_assign],
+							search: params[:search]) %>
+							<% if session[:sort_order] == 'asc' && params[:sort_by]=='user_id' %>
+  						<%= image_tag 'sortArrowUp.png', width: 12, height: 12 %>
+						<% elsif session[:sort_order] == 'desc' && params[:sort_by]=='user_id'%>
+ 						 <%= image_tag 'sortArrowDown.png', width: 12, height: 12 %>
+						<% else %>
+ 						 <%= image_tag 'sortArrowBoth.png', width: 12, height: 12 %>
+						<% end %>
+							</div>
+						</th>
+					</tr>
+					<% @issues.each do |issue| %> <%= render issue %> <% end %> <% end %>
+				</table>
+			</section>
+		</section>
+	</div>
+</section>

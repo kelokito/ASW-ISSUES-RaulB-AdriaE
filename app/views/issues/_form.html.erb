@@ -1,0 +1,47 @@
+<%= stylesheet_link_tag "new_issue.css" %> <%= form_with(model: issue) do |form| %> <% if issue.errors.any? %>
+<div style="color: red">
+	<!-- <h2><#%= pluralize(issue.errors.count, "error") %> prohibited this issue from being saved:</h2> -->
+
+	<ul>
+		<% issue.errors.each do |error| %>
+		<li><%= error.full_message %></li>
+		<% end %>
+	</ul>
+</div>
+<% end %>
+
+<div style="margin-bottom: 1em;">
+	<%= form.text_field :subject, class: 'new-issue-subject', placeholder: "Subject" %>
+</div>
+
+<div>
+	<%= form.text_area :description, class: 'new-issue-description', style: "width: 420px, height: 80px", placeholder: "Please add descriptive text to help others better understand this issue" %>
+</div>
+
+<div style class= "selectors_issues">
+
+<div style class= "new_issue_status">
+  <%= form.select :statusIssue, options_for_select([["New", 0], ["In Progess", 1], ["Ready for test", 2],["Closed", 3], ["Needs info", 4], ["Rejected", 5],["Postponed",6]], @issue.statusIssue) %>
+</div>
+
+<div style class= "new_issue_bolitas">
+  <%= form.select :typeIssue, options_for_select([["Bug", 0], ["Question", 1], ["Enhancement", 2], ["To do", 3]], @issue.typeIssue), { prompt: 'Select type' } %>
+</div>
+
+<div style class= "new_issue_bolitas">
+  <%= form.select :severityIssue, options_for_select([["Wishlist", 0], ["Minor", 1], ["Normal", 2], ["Important", 3], ["Critical", 4]], @issue.severityIssue), { prompt: 'Select severity' } %>
+</div>
+
+<div style class= "new_issue_bolitas">
+  <%= form.select :priorityIssue, options_for_select([["Low", 0], ["Normal", 1], ["High", 2]], @issue.priorityIssue), { prompt: 'Select priority'}%>
+</div>
+</div>
+
+
+
+
+<div>
+	<%= form.submit(class:"new-issue-submit") %>
+</div>
+
+<% end %>

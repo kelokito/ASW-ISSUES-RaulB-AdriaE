@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @watcher %>
+
+<div>
+  <%= link_to "Edit this watcher", edit_watcher_path(@watcher) %> |
+  <%= link_to "Back to watchers", watchers_path %>
+
+  <%= button_to "Destroy this watcher", @watcher, method: :delete %>
+</div>

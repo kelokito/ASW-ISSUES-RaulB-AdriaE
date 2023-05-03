@@ -1,0 +1,310 @@
+<%= stylesheet_link_tag "edit_issue.css" %>
+<%= stylesheet_link_tag "attachments.css" %>
+<div class="lightbox lightbox-generic-form lightbox-create-edit open" style="display:flex;">
+  <div class="main">
+    <div>
+      <h2 class="title">
+        <br>
+      <span >Editing issue</span>
+      </h2>
+    </div>
+
+    <%= render "form", issue: @issue %>
+
+    <div class="attachments-container">
+      <!-- Add attachments -->
+      <div class="attachments-header">
+        <%= form_with(model: [@issue, Attachment.new], url: issue_attachments_path(@issue), local: true) do |form| %>
+          <div style="display:flex; justify-content: space-between;">
+          <%= form.label :file, 'Add your attachments ',class: "attachments-title" %>
+          <%= form.file_field :file,  class: "button-add-attachments" %>
+          <%= image_submit_tag("save-button.png", class:"attachment-save-button")%>
+          </div>
+
+        <% end %>
+      </div>
+
+      <!--Show Attachments-->
+      <% if !@issue.attachments.nil? %>
+        <div style="width: 100%;">
+          <ul style="list-style: none;">
+            <% @issue.attachments.each do |attachment| %>
+              <div class="attachments-added">
+                <%= link_to attachment.file.filename, url_for(attachment.file) %>
+                <%= form_with(model: [attachment.issue, attachment], method: :delete, local: true) do |form| %>
+                  <%= image_submit_tag("binIcon.png", class:"attachment-delete-button")%>
+                <% end %>
+              </div>
+            <% end %>
+          </ul>
+        </div>
+      <% else %>
+        <div class="attachments-empty">
+          <p> Drop attachments here!</p>
+        </div>
+      <% end %>
+    </div>
+
+
+    <div class="back-to-issues">
+      <%= link_to "Back to issues", issues_path, class:"new-issue-submit" %>
+    </div>
+
+    <div class="comments-activitties-buttons">
+      <button id="comments-button" class="comments-button">Comments</button>
+      <button id="activities-button" class="activities-button"style="margin-left:5px;">Activities</button>
+    </div>
+
+    <div id="comments">
+      <div>
+        <%= render @issue.comments %>
+      </div>
+      <div>
+        <%= render partial: 'comments/form', locals: {issue: @issue} %>
+      </div>
+    </div>
+
+    <div id="activities" style="display:none;">
+      <%= render @issue.activities %>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#comments-button').click(function() {
+          $('#comments').show();
+          $('#activities').hide();
+        });
+
+        $('#activities-button').click(function() {
+          $('#comments').hide();
+          $('#activities').show();
+        });
+      });
+    </script>
+  </div>
+
+    <div class="wrapper">
+      <sidebar class="sidebar ticket-data">
+
+        <section class="ticket-header">
+          <span class="ticket-title ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false" style="">
+            <span >Open</span>
+          </span>
+          <span class="detail-status ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false" style="">
+            <span class="detail-status-inner js-edit-status clickable">
+              <span style="background-color:#70728F">
+              <span class="">New</span>
+            </span>
+          </span>
+        </section>
+
+        <section class="ticket-section ticket-data-container">
+          <div class="ticket-status ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false" style="">
+            <div class="type-data clickable">
+              <div class="label level-name">Type</div>
+              <div class="level-data">
+                <span class="label"><div class="level" title="<%= @issue.typeIssue %>" style="background-color: <%= get_issue_type_color(@issue.typeIssue) %>;"></div></span>
+                <span style="background-color:#E44057" class="level-color">
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="ticket-status ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false">
+            <div class="severity-data clickable">
+              <div class="label level-name">Severity</div>
+              <div class="level-data">
+                <span class="label"><div class="level" title="<%= @issue.severityIssue %>" style="background-color: <%= get_issue_severity_color(@issue.severityIssue) %>;"></div></span>
+                <span style="background-color:#40E47C" class="level-color"></span>
+              </div>
+            </div>
+          </div>
+            <div class="ticket-status ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false">
+              <div class="priority-data clickable">
+                <div class="label level-name">Priority</div>
+                <div class="level-data">
+                  <span class="label"><div class="level" title="<%= @issue.priorityIssue %>" style="background-color: <%= get_issue_priority_color(@issue.priorityIssue) %>;"></div></span>
+                  <span style="background-color:#E4CE40" class="level-color"></span>
+                </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="ticket-section ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false" style="">
+        	<div class="ticket-section-label"><span>Assigned</span></div>
+        	<div class="ticket-user-list-container">
+
+        		<div class="ticket-user-list-content">
+        			<div class="ticket-user-list">
+        				<!---->
+        				<%
+        				@assignedUserId = Issue.find(@issue.id).user_id
+        				%>
+                  <% if !@assignedUserId.nil? then %>
+                     <div class="" style="">
+                      <!----><div class="user-list-single">
+                        <div class="user-list-avatar">
+                          <!--AÑADIR AVATAR-->
+                        </div>
+                        <div class="user-list-name"><span><%= User.find(@assignedUserId).full_name %></span></div>
+                      </div><!---->
+                    </div>
+
+                  <% end%>
+        			</div>
+        			<!---->
+        			<div class="ticket-users-actions" style="">
+        				<a class="ticket-users-action">
+        					<span><%= link_to "Add assigned", issue_assigned_path(@issue), class:"ticket-users-action"%></span>
+        				</a>
+        				<!---->
+        				<a class="ticket-users-action"><span>Assign to me</span></a>
+        				<!---->
+        			</div>
+        			<!---->
+        		</div>
+        	</div>
+        </section>
+
+        <section class="ticket-section ticket-watchers">
+         <div class="ticket-section-label">
+            <span>Watchers</span><!---->
+         </div>
+         <div class="ticket-user-list-container">
+
+            <div ng-class="{ 'loading': vm.loading }" class="ticket-user-list-content">
+               <div class="ticket-user-list">
+                  <!---->
+                  <% @issueWatchers = Watcher.where(:issue_id => @issue.id)%>
+                  <% if !@issueWatchers.nil? then @issueWatchers.each do |watcher| %>
+                     <div class="" style="">
+                      <!----><div class="user-list-single">
+                        <div class="user-list-avatar">
+                          <!--AÑADIR AVATAR-->
+                        </div>
+                        <div class="user-list-name"><span><%= User.find(watcher.user_id).full_name %></span></div>
+                      </div><!---->
+                    </div>
+
+                  <% end end%>
+
+               </div>
+               <!---->
+               <div class="ticket-users-actions">
+                  <!---->
+                  <a class="ticket-users-action" style="">
+
+                     <span><%= link_to "Add watchers", issue_watchers_path(@issue), class:"ticket-users-action"%></span>
+                  </a>
+                  <!----><!---->
+                  <a class="ticket-users-action">
+
+                     <span>Watch</span>
+                  </a>
+                  <!----><!---->
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="ticket-section ticket-detail-settings">
+       <tg-promote-to-us-button class="ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false">
+         <% if @issue.due_date.nil? then %>
+             <button title="Set due date" class="btn-icon due-date-button is-editable" aria-hidden="false">
+               <%= link_to issue_dueDate_path(@issue) do%>
+                  <%= image_tag 'clockIcon.png', width: 12, height: 12 %>
+               <% end %>
+
+            </button>
+         <% else %>
+             <button title="Set due date" class="btn-icon due-date-button is-editable" aria-hidden="false", style="background-color: #ff9000">
+                 <%= link_to issue_dueDate_path(@issue) do%>
+                    <%= image_tag 'clockIcon.png', width: 12, height: 12 %>
+                 <% end %>
+
+              </button>
+          <%end%>
+       </tg-promote-to-us-button>
+       <!---->
+       <tg-assign-sprint-to-issue-button class="ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false">
+          <button title="Attach issue to Sprint" class="btn-icon assign-issue-button is-editable button-unset is-active" aria-hidden="false">
+          <%= image_tag "contactbookIcon.png", size: "12x12" %>
+          </button>
+          <button title="Detach issue from Sprint" class="btn-icon assign-issue-button is-editable button-set ng-hide" aria-hidden="true">
+          <%= image_tag "attachIcon.png", size: "12x12" %>
+          </button>
+          <div class="lightbox lightbox-assign-sprint-to-issue">
+             <tg-lightbox-close>
+                <a class="close" ng-click="onClose()" href="" title="close">
+
+                </a>
+             </tg-lightbox-close>
+             <div class="lightbox-assign-related-sprint">
+                <h2 class="title">Attach issue to Sprint</h2>
+                <tg-search-list label="Which Sprint?" placeholder="Filter Sprints" items="milestones" class="ng-pristine ng-untouched ng-valid ng-empty" aria-invalid="false">
+                   <fieldset class="search-list">
+                      <label for="items-filter">Which Sprint?</label><!---->
+                      <a href="" class="btn-link show-closed">
+
+                         <!----><span ng-if="!showClosed">Show closed sprints</span><!----><!---->
+                      </a>
+                      <!---->
+                      <input id="items-filter" type="text" placeholder="Filter Sprints" class="items-filter ng-pristine ng-untouched ng-valid ng-empty" aria-invalid="false">
+                      <ul>
+                         <!---->
+                      </ul>
+                      <p class="no-stories-found" aria-hidden="false"></p>
+                   </fieldset>
+                </tg-search-list>
+                <button href="" class="btn-big select-option" disabled="disabled">Save</button>
+             </div>
+          </div>
+       </tg-assign-sprint-to-issue-button>
+       <!---->
+       <tg-block-button class="ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false" style="">
+          <% if @issue.blocked.nil? || !@issue.blocked then %>
+              <button title="Set due date" class="btn-icon block-button is-editable" aria-hidden="false">
+                 <%= link_to issue_block_path(@issue) do%>
+                    <%= image_tag 'lockIcon.png', width: 12, height: 12 %>
+                 <% end %>
+
+              </button>
+         <% else %>
+             <button title="Set due date" class="btn-icon due-date-button is-editable" aria-hidden="false", style="background-color: #FF0000;">
+                 <%= link_to issue_block_path(@issue) do%>
+                    <%= image_tag 'lockIcon.png', width: 12, height: 12 %>
+                 <% end %>
+
+              </button>
+          <%end%>
+       </tg-block-button>
+       <tg-delete-button class="ng-pristine ng-untouched ng-valid ng-not-empty" aria-invalid="false">
+          <%= button_to @issue, class: "btn-icon button-delete",method: :delete do%>
+              <%= image_tag 'binIcon.png', width: 12, height: 12%>
+          <% end %>
+
+          </button>
+       </tg-delete-button>
+    </section>
+    <% if !@issue.blocked.nil? && @issue.blocked then %>
+     <section class="ticket-section ticket-data-container">
+          <div class="detail-header-line block-desc-container" aria-hidden="false">
+          	<span class="blocked-sign">
+          		<%= image_tag "lockIcon.png", size: "12x12" %>
+          		<span class="block-description-title">Blocked</span>
+          	</span>
+          	<!---->
+          	<span class="block-description" style=""><p><%= @issue.blocked_reason %></p></span>
+          	<!---->
+          </div>
+
+        </section>
+      <% end %>
+
+      </sidebar>
+    </div>
+  </div>
+</div>
+
+
+<br>
