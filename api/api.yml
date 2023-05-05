@@ -1,0 +1,271 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: Issues Taiga
+  description: "This is the Open API documentation for the REST API of our beloved application **Issues** deployed at <https://falta-link/>. <br>All operations are executable. All of the  operations requires authentication, you must **Authorize** your request by providing the token value you got when you created the tweet."
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/kelokito/issues-api/1.0.0
+  - url: 'https://falta-link/'
+paths:
+  /issues:
+    get:
+      tags:
+      - issues
+      summary: Retrieves all the Issues
+      operationId: getAllIssues
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Issue'
+    post:
+      tags:
+      - issues
+      summary: Adds a new Issue to the set of issues
+      operationId: addIssue
+      requestBody:
+        description: Provide the necessary fields to generate a new Issue
+        content:
+          application/json:
+            schema:
+              required:
+              - subject
+              type: object
+              properties:
+                subject:
+                  type: string
+                  minLength: 4
+                  example: 'My subject'
+                description:
+                  type: string
+                  minLength: 4
+                  maxLength: 280
+                  example: 'My description'
+                typeIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 3
+                  example: 0
+                severityIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 4
+                  example: 0
+                priorityIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 2
+                  example: 0
+                statusIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 6
+                  example: 0
+        required: true
+      responses:
+        201:
+          description: Issue created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewIssue'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error400'
+  /issues/{issueId}/edit:
+    get:
+      tags: 
+      - issues
+      summary: Finds an Issue by its ID
+      description: Returns a single Issue
+      operationId: getIssueById
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Issue'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResult'
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+
+  /issues/{issueId}/comments:
+  #revisar
+    get:
+      tags: 
+      - issues/comments
+      summary: Find the comments corresponding to an Issue
+      description: Returns all the comments of the specified Issue
+      operationId: getCommentsByIssueId
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IssueComments'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+          
+components:
+  schemas:
+    Issue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        subject:
+          type: string
+          minLength: 4
+          example: 'My subject'
+        description:
+          type: string
+          example: 'My description'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        due_date:
+          type: string
+          format: date-time
+        blocked:
+          type: boolean
+        blocked_reason: 
+          type: string
+          example: 'blocked reaon'
+        watchers:
+          type: string
+          example: 'Member X'
+        typeIssue:
+          type: integer
+          minimum: 0
+          maximum: 3
+          example: 0
+        severityIssue:
+          type: integer
+          minimum: 0
+          maximum: 4
+          example: 0
+        priorityIssue:
+          type: integer
+          minimum: 0
+          maximum: 2
+          example: 0
+        statusIssue:
+          type: integer
+          minimum: 0
+          maximum: 6
+          example: 0
+        user_id:
+          type: string
+          example: 'Member X'
+        createdBy:
+          type: string
+          example: 'Member X'
+        _links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: 'https://falta-link/issues/2/edit'
+    NewIssue:
+      allOf:
+        - $ref: '#/components/schemas/Issue'
+        - type: object
+          properties:
+            token:
+              type: string
+              example: '9656f8894781485f7e9e168584a17ec002ad77379a3e2b3ff4604b916d98c0a7'
+          required:
+            - token
+    IssueComments:
+      type: object
+      properties:
+        issue_id:
+          type: integer
+          format: int64
+          example: 2
+        user_id:
+          type: integer
+          format: int64
+          example: 2
+        content:
+          type: string
+          minLength: 1
+          example: 'My comment'
+        created_at:
+          type: string
+          format: date-time
+    ErrorResult:
+      type: object
+      properties:
+        message: 
+          type: string
+          example: 'Content is too long (maximum is 280 characters)'
+      required:
+        - message
+  examples:
+    error400:
+      value:
+        message: "Content is too long (maximum is 280 characters)"
+    error401:
+      value:
+        message: "You provided no token"
+    error403:
+      value:
+        message: "You provided an invalid token"
+    error404:
+      value:
+        message: "There is no tweet with 'id'=8"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: Authorization
+      in: header
