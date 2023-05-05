@@ -41,12 +41,12 @@ paths:
                 subject:
                   type: string
                   minLength: 4
-                  example: 'Militao >> Araujo'
+                  example: 'My subject'
                 description:
                   type: string
                   minLength: 4
                   maxLength: 280
-                  example: 'Factoussss'
+                  example: 'My description'
                 typeIssue:
                   type: integer
                   minimum: 0
@@ -84,6 +84,71 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error400'
+  /issues/{issueId}/edit:
+    get:
+      tags: 
+      - issues
+      summary: Finds an Issue by its ID
+      description: Returns a single Issue
+      operationId: getIssueById
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Issue'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResult'
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+
+  /issues/{issueId}/comments:
+  #revisar
+    get:
+      tags: 
+      - issues/comments
+      summary: Find the comments corresponding to an Issue
+      description: Returns all the comments of the specified Issue
+      operationId: getCommentsByIssueId
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IssueComments'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+          
 components:
   schemas:
     Issue:
@@ -96,10 +161,10 @@ components:
         subject:
           type: string
           minLength: 4
-          example: 'Ansu Fati <<< Amador Ribas'
+          example: 'My subject'
         description:
           type: string
-          example: 'Aiiii mi cookie'
+          example: 'My description'
         created_at:
           type: string
           format: date-time
@@ -113,10 +178,10 @@ components:
           type: boolean
         blocked_reason: 
           type: string
-          example: 'Merengue merengue'
+          example: 'blocked reaon'
         watchers:
           type: string
-          example: 'Julian de los Potulos'
+          example: 'Member X'
         typeIssue:
           type: integer
           minimum: 0
@@ -139,10 +204,10 @@ components:
           example: 0
         user_id:
           type: string
-          example: 'Julian de los Potulos'
+          example: 'Member X'
         createdBy:
           type: string
-          example: 'Julian de los Potulos'
+          example: 'Member X'
         _links:
           type: object
           properties:
@@ -160,6 +225,24 @@ components:
               example: '9656f8894781485f7e9e168584a17ec002ad77379a3e2b3ff4604b916d98c0a7'
           required:
             - token
+    IssueComments:
+      type: object
+      properties:
+        issue_id:
+          type: integer
+          format: int64
+          example: 2
+        user_id:
+          type: integer
+          format: int64
+          example: 2
+        content:
+          type: string
+          minLength: 1
+          example: 'My comment'
+        created_at:
+          type: string
+          format: date-time
     ErrorResult:
       type: object
       properties:
