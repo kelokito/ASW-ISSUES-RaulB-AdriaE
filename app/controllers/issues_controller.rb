@@ -231,14 +231,14 @@ class IssuesController < ApplicationController
         if old_issue_params['subject'] != new_issue_params['subject']
           Activity.create(user_id: current_user.id, issue_id: @issue.id,
             action:"Subject Update",
-            description:"The new subject is: #{new_issue_params['subject']}")
+            description:"#{old_issue_params['subject']}, changed to: #{new_issue_params['subject']}")
         end
 
         #Comprovem nova descripcio
         if old_issue_params['description'] != new_issue_params['description']
           Activity.create(user_id: current_user.id, issue_id: @issue.id,
             action:"Description Update",
-            description:"The new description: #{new_issue_params['description']}")
+            description:"#{old_issue_params['description']}, changed to: #{new_issue_params['description']}")
         end
 
         #Comprovem nou tipus
@@ -246,7 +246,7 @@ class IssuesController < ApplicationController
           types = ["Bug", "Question", "Enhancement", "To do"]
           Activity.create(user_id: current_user.id, issue_id: @issue.id,
             action:"Type Update",
-            description:"The new type is: #{types[new_issue_params['typeIssue']]}")
+            description:"#{types[old_issue_params['typeIssue']]}, changed to: #{types[new_issue_params['typeIssue']]}")
         end
 
         #Comprovem nova severity
@@ -254,7 +254,7 @@ class IssuesController < ApplicationController
           severity = ["Wishlist","Minor","Normal","Important","Critical"]
           Activity.create(user_id: current_user.id, issue_id: @issue.id,
             action:"Severity Update",
-            description:"The new severity is: #{severity[new_issue_params['severityIssue']]}")
+            description:"#{severity[old_issue_params['severityIssue']]}, changed to: #{severity[new_issue_params['severityIssue']]}")
         end
 
         #Comprovem nova priority
@@ -262,7 +262,7 @@ class IssuesController < ApplicationController
           priority = ["Low","Normal","High"]
           Activity.create(user_id: current_user.id, issue_id: @issue.id,
             action:"Priority Update",
-            description:"The new priority is: #{priority[new_issue_params['priorityIssue']]}")
+            description:"#{priority[old_issue_params['priorityIssue']]}, changed to: #{priority[new_issue_params['priorityIssue']]}")
         end
 
         #Comprovem nou status
@@ -270,7 +270,7 @@ class IssuesController < ApplicationController
           status = ["New","In Progess","Ready for test","Closed","Needs info","Rejected","Postponed"]
           Activity.create(user_id: current_user.id, issue_id: @issue.id,
             action:"Status Update",
-            description:"The new status is: #{status[new_issue_params['statusIssue']]}")
+            description:"#{status[old_issue_params['statusIssue']]}, changed to: #{status[new_issue_params['statusIssue']]}")
         end
 
 
