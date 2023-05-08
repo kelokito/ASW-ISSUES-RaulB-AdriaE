@@ -5,16 +5,14 @@ info:
   description: "This is the Open API documentation for the REST API of our beloved application **Issues** deployed at <https://falta-link/>. <br>All operations are executable. All of the  operations requires authentication, you must **Authorize** your request by providing the token value you got when you created the tweet."
 servers:
   # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/kelokito/issues-api/1.0.0
-  - url: 'https://falta-link/'
+  - url: 'falta/'
 paths:
   /issues:
     get:
       tags:
       - issues
       summary: Retrieves all the Issues
-      operationId: getAllIssues
+      operationId: index
       responses:
         200:
           description: successful operation
@@ -84,7 +82,40 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error400'
-  /issues/{issueId}/edit:
+                  
+  /issues/bulk:
+    post:
+      tags:
+      - issues/bulk
+      summary: Creates multiple new Issues
+      operationId: bulkCreate
+      requestBody:
+        description: Provide the necessary fields to generate as Issues as you want
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                  $ref: '#/components/schemas/NewIssue'
+        required: true
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Issue'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResult'
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'  
+      
+  /issues/{issueId}:
     get:
       tags: 
       - issues
@@ -140,7 +171,7 @@ paths:
                 schema:
                   type: array
                   items:
-                    $ref: '#/components/schemas/IssueComments'
+                    $ref: '#/components/schemas/Comment'
           404:
             description: 'Error: Not Found'
             content:
@@ -148,7 +179,56 @@ paths:
                 examples:
                   errorExample:
                     $ref: '#/components/examples/error404'
-          
+    post:
+      tags:
+      - issues/comments
+      summary: A new user creates a new comments in a specified issue
+      operationId: addComment
+      parameters:
+      - name: issueId
+        in: path
+        description: Tweet id to like
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Provide a valid user_id and issue_id to generate a new comment with the content that you have written
+        content:
+          application/json:
+            schema:
+              required:
+              - content
+              - issue_id
+              - user_id
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: 'My comment'
+                issue_id:
+                  type: integer
+                  format: int64
+                  example: 2
+                user_id:
+                  type: integer
+                  format: int64
+                  example: 2
+        required: true
+      responses:
+        201:
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewComment'
+        400:
+          description: Something went wrong
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error400'
 components:
   schemas:
     Issue:
@@ -225,7 +305,7 @@ components:
               example: '9656f8894781485f7e9e168584a17ec002ad77379a3e2b3ff4604b916d98c0a7'
           required:
             - token
-    IssueComments:
+    Comment:
       type: object
       properties:
         issue_id:
@@ -243,6 +323,20 @@ components:
         created_at:
           type: string
           format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    NewComment:
+      allOf:
+        - $ref: '#/components/schemas/Comment'
+        - type: object
+          properties:
+            token:
+              type: string
+              example: '9656f8894781485f7e9e168584a17ec002ad77379a3e2b3ff4604b916d98c0a7'
+          required:
+            - token
+        #revisar
     ErrorResult:
       type: object
       properties:
@@ -263,7 +357,14 @@ components:
         message: "You provided an invalid token"
     error404:
       value:
-        message: "There is no tweet with 'id'=8"
+        message: "There is no issue with 'id'=8"
+    IssueNotFound:
+      value:
+        messaege: "There is no issue with the indicated ID"
+    UserNotFound:
+      value:
+        messaege: "There is no user with the indicated ID"
+        
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
