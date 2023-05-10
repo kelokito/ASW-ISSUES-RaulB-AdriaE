@@ -18,5 +18,6 @@ module Waslab04
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    require_relative '../app/middleware/api_key_middleware'
   end
 end

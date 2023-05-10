@@ -3,15 +3,29 @@ Rails.application.routes.draw do
   get '/issues/bulk', to: 'issues#bulk', as: 'bulk_issue'
   post '/issues/bulkForm', to: 'issues#bulkCreate', as: 'issues_bulkForm_post'
 
+  resources :issues do
+    resources :comments
+  end
+
+  resources :issues do
+    member do
+      put :assigned
+      patch :updateAssigned
+    end
+  end
+
+  resources :issues do
+    collection do
+      get :filter_by_name
+    end
+  end
   resources :issue_user_modifications
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     sessions: 'users/sessions',
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
-  resources :issues do
-    resources :comments, only: [:create]
-  end
+
   resources :activities
   resources :watchers
   resources :users

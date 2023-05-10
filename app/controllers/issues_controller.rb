@@ -3,7 +3,7 @@ class IssuesController < ApplicationController
 
   before_action :set_issue, only: %i[ show sort edit update destroy dueDate updateDueDate block updateBlock unblock watchers updateWatchers assigned updateAssigned ]
   protect_from_forgery except: [:bulkCreate]
-
+  protect_from_forgery except: [:filter_by_name]
   # GET /issues or /issues.json
   def index
     # .order(created_at: :desc) Ordena les issues de més noves a més velles.
@@ -82,6 +82,11 @@ class IssuesController < ApplicationController
     end
   end
 
+  def filter_by_name
+    if params[:subject]
+      @issues = @issues.where("subject like ?", "%#{params[:subject]}%")
+    end
+  end
 
 
   # GET /issues/1 or /issues/1.json
