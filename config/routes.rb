@@ -21,6 +21,14 @@ Rails.application.routes.draw do
     resources :attachments, only: [:create, :destroy]
   end
 
+  resources :issues do
+    member do
+      put :assigned
+      patch :updateAssigned
+    end
+  end
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # root 'application#hello'
