@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for aswadra10 on 2023-04-27T14:14:42Z
+# fly.toml app configuration file generated for sprint2aswadra on 2023-05-10T16:46:12Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "aswadra10"
+app = "sprint2aswadra"
 kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "mad"

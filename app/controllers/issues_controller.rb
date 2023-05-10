@@ -82,6 +82,12 @@ class IssuesController < ApplicationController
     end
   end
 
+  def filter_by_name
+    if params[:subject]
+      @issues = @issues.where("subject like ?", "%#{params[:subject]}%")
+    end
+  end
+
 
 
   # GET /issues/1 or /issues/1.json
