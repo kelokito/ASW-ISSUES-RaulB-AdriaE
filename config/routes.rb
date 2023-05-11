@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   end
 
   resources :issues do
+    resources :activities
+  end
+
+  resources :issues do
     member do
       put :assigned
       patch :updateAssigned

@@ -5,7 +5,7 @@ info:
   description: "This is the Open API documentation for the REST API of our beloved application **Issues** deployed at <https://falta-link/>. <br>All operations are executable. All of the  operations requires authentication, you must **Authorize** your request by providing the token value you got when you created the tweet."
 servers:
   # Added by API Auto Mocking Plugin
-  - url: 'falta/'
+  - url: 'http://44.204.143.148:8080/'
 paths:
   /issues:
     get:
@@ -22,6 +22,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Issue'
+      security:
+      - ApiKeyAuth: []
     post:
       tags:
       - issues
@@ -82,8 +84,115 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error400'
-                  
-  /issues/bulk:
+    security:
+    - ApiKeyAuth: []
+  /issues/{issueId}:
+    get:
+      tags:
+      - issues
+      summary: Finds an Issue by its ID
+      description: Returns a single Issue
+      operationId: getIssueById
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Issue'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResult'
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+          403:
+            description: 'Error: Forbidden'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResult'
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error403'
+    put:
+      tags:
+        - issues
+      summary: Update an existing Issue with the new parameters passed
+      description: Update an existing pet by Id
+      operationId: updateIssue
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Update an existent pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Issue'
+        required: true
+      responses:
+        200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Issue'
+        404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResult'
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+      #security:
+      #- ApiKeyAuth: []
+    delete:
+      tags:
+      - issues
+      summary: Deletes an Issue associated with the ID passed as parameter, if the ID does not exist, don't do nothing
+      operationId: destroy
+      parameters:
+      - name: issueId
+        in: path
+        description: Issue id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: No content
+          content:
+            application/json: {}
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+  /issues/bulkForm:
     post:
       tags:
       - issues/bulk
@@ -113,44 +222,14 @@ paths:
                   $ref: '#/components/schemas/ErrorResult'
                 examples:
                   errorExample:
-                    $ref: '#/components/examples/error404'  
-      
-  /issues/{issueId}:
-    get:
-      tags: 
-      - issues
-      summary: Finds an Issue by its ID
-      description: Returns a single Issue
-      operationId: getIssueById
-      parameters:
-      - name: issueId
-        in: path
-        description: ID of the Tweet to return
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-          200:
-            description: successful operation
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Issue'
-          404:
-            description: 'Error: Not Found'
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResult'
-                examples:
-                  errorExample:
                     $ref: '#/components/examples/error404'
+
+
 
   /issues/{issueId}/comments:
   #revisar
     get:
-      tags: 
+      tags:
       - issues/comments
       summary: Find the comments corresponding to an Issue
       description: Returns all the comments of the specified Issue
@@ -158,7 +237,7 @@ paths:
       parameters:
       - name: issueId
         in: path
-        description: ID of the Tweet to return
+        description: ID of the Issue to return
         required: true
         schema:
           type: integer
@@ -179,6 +258,8 @@ paths:
                 examples:
                   errorExample:
                     $ref: '#/components/examples/error404'
+      #security:
+      #- ApiKeyAuth: []
     post:
       tags:
       - issues/comments
@@ -187,7 +268,7 @@ paths:
       parameters:
       - name: issueId
         in: path
-        description: Tweet id to like
+        description: ID of the Issue to returnI
         required: true
         schema:
           type: integer
@@ -229,6 +310,156 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error400'
+      #security:
+      #- ApiKeyAuth: []
+  /issues/{issueId}/activities:
+  #revisar
+    get:
+      tags:
+      - issues/activities
+      summary: Find the activities corresponding to an Issue
+      description: Returns all the activities of the specified Issue
+      operationId: getActivitiesByIssueId
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Issue to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Activity'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+  /issues/filter:
+    get:
+      tags:
+      - issues/filters
+      summary: Filtrar issues
+      description: Filtra los issues según los parámetros proporcionados
+      parameters:
+        - in: query
+          name: filter_by_type
+          schema:
+            type: string
+          description: Tipo de issue a filtrar
+        - in: query
+          name: filter_by_severity
+          schema:
+            type: string
+          description: Severidad de issue a filtrar
+        - in: query
+          name: filter_by_priority
+          schema:
+            type: string
+          description: Prioridad de issue a filtrar
+        - in: query
+          name: filter_by_status
+          schema:
+            type: string
+          description: Estado de issue a filtrar
+        - in: query
+          name: filter_by_assign
+          schema:
+            type: string
+          description: Nombre de usuario asignado al issue a filtrar
+        - in: query
+          name: filter_by_createdBy
+          schema:
+            type: string
+          description: Nombre de usuario creador del issue a filtrar
+      responses:
+        '200':
+          description: Lista de issues filtrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Issue'
+  /issues/filter_by_name:
+    get:
+      tags:
+      - issues/filters
+      summary: Filtrar issues por nombre
+      description: Filtra los issues que contienen el nombre proporcionado en el parámetro de consulta "name"
+      parameters:
+        - in: query
+          name: subject
+          schema:
+            type: string
+          description: Nombre del issue a filtrar
+      responses:
+        '200':
+          description: Lista de issues filtrados por nombre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Issue'
+  /watchers:
+    get:
+      tags:
+      - issues/watchers
+      summary: Obtener lista de issues
+      description: Devuelve una lista con la información de todos los watchers
+      responses:
+        '200':
+          description: Lista de issues
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Watcher'
+    post:
+      tags:
+      - issues/watchers
+      summary: Crear un nuevo watcher
+      description: Crea un nuevo watcher con la información proporcionada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewWatcher'
+      responses:
+        '201':
+          description: Watcher creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Watcher'
+  /watchers/{watcherId}:
+    delete:
+      tags:
+      - issues/watchers
+      summary: Eliminar un watcher
+      description: Elimina un watcher existente con el ID proporcionado
+      parameters:
+        - in: path
+          name: watcherId
+          required: true
+          schema:
+            type: integer
+          description: ID del watcher a eliminar
+      responses:
+        '204':
+          description: Watcher eliminado exitosamente
 components:
   schemas:
     Issue:
@@ -245,18 +476,12 @@ components:
         description:
           type: string
           example: 'My description'
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
         due_date:
           type: string
           format: date-time
         blocked:
           type: boolean
-        blocked_reason: 
+        blocked_reason:
           type: string
           example: 'blocked reaon'
         watchers:
@@ -283,11 +508,11 @@ components:
           maximum: 6
           example: 0
         user_id:
-          type: string
-          example: 'Member X'
+          type: integer
+          example: 1
         createdBy:
-          type: string
-          example: 'Member X'
+          type: integer
+          example: 1
         _links:
           type: object
           properties:
@@ -320,12 +545,6 @@ components:
           type: string
           minLength: 1
           example: 'My comment'
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     NewComment:
       allOf:
         - $ref: '#/components/schemas/Comment'
@@ -336,11 +555,67 @@ components:
               example: '9656f8894781485f7e9e168584a17ec002ad77379a3e2b3ff4604b916d98c0a7'
           required:
             - token
+    Activity:
+      type: object
+      properties:
+        action:
+          type: string
+          minLength: 1
+          example: 'New Update'
+        description:
+          type: string
+          example: 'Value1, changed to: Value2'
+        issue_id:
+          type: integer
+          format: int64
+          example: 2
+        user_id:
+          type: integer
+          format: int64
+          example: 2
         #revisar
+    Watcher:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identificador único del watcher
+        issue_id:
+          type: string
+          description: id del issue
+        user_id:
+          type: string
+          description: id del user
+        created_at:
+          type: string
+          format: date-time
+          description: Estado actual del issue (abierto, cerrado, en progreso, etc.)
+        updated_at:
+          type: string
+          format: date-time
+          description: Fecha y hora de creación del issue
+        url:
+          type: string
+          description: Fecha y hora de la última actualización del issue
+    NewWatcher:
+      type: object
+      required:
+        - issue_id
+        - user_id
+      properties:
+        issue_id:
+          type: string
+          description: id de la issue
+        user_id:
+          type: string
+          description: id del user
+      example:
+        issue_id: 1
+        user_id: 1
     ErrorResult:
       type: object
       properties:
-        message: 
+        message:
           type: string
           example: 'Content is too long (maximum is 280 characters)'
       required:
@@ -364,7 +639,7 @@ components:
     UserNotFound:
       value:
         messaege: "There is no user with the indicated ID"
-        
+
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
