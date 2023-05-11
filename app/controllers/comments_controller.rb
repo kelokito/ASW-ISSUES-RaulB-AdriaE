@@ -7,17 +7,36 @@ class CommentsController < ApplicationController
     @comment = @issue.comments.create(comment_params)
     @comment.user_id = current_user.id
 
-    if !@comment.save
-      render 'issues/edit', alert: 'Error adding comment'
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to edit_issue_path(@issue), notice: 'Comment added successfully'}
+        format.json { render json: @comment, status: :created }
+      else
+        format.html { render 'issues/edit', alert: 'Error adding comment' }
+        format.json { render json: { error: 'Failed to create comment' }, status: :unprocessable_entity }
+      end
     end
+  end
 
-    redirect_to edit_issue_path(@issue), notice: 'Comment added successfully'
+  def index
+    @issue = Issue.find(params[:issue_id])
+    @comments = @issue.comments
+    respond_to do |format|
+      format.html
+      format.json { render json: @comments }
+    end
   end
 
   private
 
   def set_issue
-    @issue = Issue.find(params[:issue_id])
+    @issue = Issue.find_by(id: params[:issue_id])
+    unless @issue
+      respond_to do |format|
+        format.html { redirect_to issues_path, alert: 'Issue not found' }
+        format.json { render json: { error: 'Issue not found' }, status: :not_found }
+      end
+    end
   end
 
 

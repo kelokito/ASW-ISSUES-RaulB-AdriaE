@@ -2,10 +2,6 @@
 
 Students:
 
-* Marco, Roger OK
-
-* Rivera, Rubén OK
-
 * Bometón, Raul OK
 
 * Espinoza, Adrià ok

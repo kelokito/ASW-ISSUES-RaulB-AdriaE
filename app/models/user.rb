@@ -1,6 +1,13 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthabl
+  before_create :generate_api_key
+  private
+
+  def generate_api_key
+    self.api_key = SecureRandom.hex
+  end
+
   attribute :bio, :string
   has_one_attached :avatar do |attachable|
     attachable.variant :thumb, resize_to_fill: [100, 100]
