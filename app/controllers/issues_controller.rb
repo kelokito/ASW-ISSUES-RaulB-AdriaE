@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   include IssuesHelper
-
+  before_action :authenticate_user, only: [:create]
   before_action :set_issue, only: %i[ show sort edit update destroy dueDate updateDueDate block updateBlock unblock watchers updateWatchers assigned updateAssigned ]
   protect_from_forgery except: [:bulkCreate]
   protect_from_forgery except: [:filter_by_name]
@@ -19,7 +19,6 @@ class IssuesController < ApplicationController
    end
 
   filter
-
   if params[:sort_by] == 'created_at'
     @issues = @issues.order(created_at: session[:sort_order])
 
@@ -326,5 +325,34 @@ class IssuesController < ApplicationController
 
     def issue_watchers_params
       params.require(:issue).permit(:watchers)
+    end
+
+    def authenticate_user
+      if !api_key_present?
+        render json: { error: 'API key is missing' }, status: :unauthorized
+        return
+      end
+      api_key = extract_api_key(request.headers['Authorization'])
+
+      #verificamos si la apikey corresponde a un user
+      @user = User.find_by(api_key: api_key)
+
+      unless @user
+        render json: { error: 'User not found' }, status: :unauthorized
+        return
+      end
+    end
+
+    def extract_api_key(authorization_header)
+      return nil if authorization_header.blank?
+
+      token = authorization_header.split(' ').last
+      token.strip! unless token.nil?
+
+      token
+    end
+
+    def api_key_present?
+      !request.headers['Authorization'].blank?
     end
 end
