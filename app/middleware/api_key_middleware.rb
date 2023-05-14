@@ -5,8 +5,8 @@ class ApiKeyMiddleware
     @app = app
   end
 
-  def call(env)
-    api_key = env['HTTP_API_KEY']
+  def call(headers)
+    api_key = headers['ApiKeyAuth']
     return [401, { 'Content-Type' => 'text/plain' }, ['Unauthorized']] unless api_key
 
     user = User.find_by(api_key: api_key)
