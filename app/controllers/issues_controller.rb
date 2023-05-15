@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   include IssuesHelper
-  before_action :authenticate_user, only: [:create]
+  before_action :authenticate_user, only: [:create, :destroy, :update]
   before_action :set_issue, only: %i[ show sort edit update destroy dueDate updateDueDate block updateBlock unblock watchers updateWatchers assigned updateAssigned ]
   protect_from_forgery except: [:bulkCreate]
   protect_from_forgery except: [:filter_by_name]
@@ -189,22 +189,52 @@ class IssuesController < ApplicationController
   end
 
   def bulkCreate
-    @linias = issue_params[:subject].split(/[\n\r]+/).reverse()
     respond_to do |format|
-      @linias.each do |linia|
-        u = issue_params.to_h
-        u[:subject] = linia
-        @issue = Issue.new(u)
-        if @issue.save
-        else
-          format.html { render :bulk, status: :unprocessable_entity }
-          format.json { render json: @issue.errors, status: :unprocessable_entity }
+      format.html do
+        @linias = issue_params[:subject].split(/[\n\r]+/).reverse()
+        success_count = 0
+
+        @linias.each do |linia|
+          u = issue_params.to_h
+          u[:subject] = linia
+          @issue = Issue.new(u)
+
+          if @issue.save
+            success_count += 1
+          else
+            format.html { render :bulk, status: :unprocessable_entity }
+            return
+          end
         end
+
+        redirect_to issues_url, notice: "#{success_count} issues were successfully created."
       end
-      format.html { redirect_to issues_url, notice: "Issues were successfully created." }
-      format.json { render :index, status: :created }
+
+      format.json do
+        issues_params = params.require(:issues)
+        if issues_params.blank?
+          render json: { error: "No issues provided in the request" }, status: :unprocessable_entity
+          return
+        end
+
+        success_count = 0
+
+        issues_params.each do |issue_params|
+          @issue = Issue.new(issue_params.permit(:subject))
+
+          if @issue.save
+            success_count += 1
+          else
+            render json: { error: "Failed to create issue: #{issue_params}" }, status: :unprocessable_entity
+            return
+          end
+        end
+
+        render json: { message: "#{success_count} issues were successfully created." }, status: :ok
+      end
     end
   end
+
 
   # POST /issues or /issues.json
   def create
