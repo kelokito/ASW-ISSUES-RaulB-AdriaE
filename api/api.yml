@@ -5,7 +5,7 @@ info:
   description: "This is the Open API documentation for the REST API of our beloved application **Issues** deployed at <https://falta-link/>. <br>All operations are executable. All of the  operations requires authentication, you must **Authorize** your request by providing the token value you got when you created the tweet."
 servers:
   # Added by API Auto Mocking Plugin
-  - url: 'http://44.204.143.148:8080/'
+  - url: 'http://44.199.252.242:8080/'
 paths:
   /issues:
     get:
@@ -22,8 +22,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Issue'
-      security:
-      - ApiKeyAuth: []
     post:
       tags:
       - issues
@@ -84,11 +82,11 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error400'
-    security:
-    - ApiKeyAuth: []
+      security:
+      - ApiKeyAuth: [] 
   /issues/{issueId}:
     get:
-      tags:
+      tags: 
       - issues
       summary: Finds an Issue by its ID
       description: Returns a single Issue
@@ -145,7 +143,36 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Issue'
+              properties:
+                subject:
+                  type: string
+                  minLength: 4
+                  example: 'My subject'
+                description:
+                  type: string
+                  minLength: 4
+                  maxLength: 280
+                  example: 'My description'
+                typeIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 3
+                  example: 0
+                severityIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 4
+                  example: 0
+                priorityIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 2
+                  example: 0
+                statusIssue:
+                  type: integer
+                  minimum: 0
+                  maximum: 6
+                  example: 0
         required: true
       responses:
         200:
@@ -163,8 +190,8 @@ paths:
                 examples:
                   errorExample:
                     $ref: '#/components/examples/error404'
-      #security:
-      #- ApiKeyAuth: []
+      security:
+      - ApiKeyAuth: [] 
     delete:
       tags:
       - issues
@@ -192,6 +219,8 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error401'
+      security:
+      - ApiKeyAuth: [] 
   /issues/bulkForm:
     post:
       tags:
@@ -203,9 +232,17 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                  $ref: '#/components/schemas/NewIssue'
+              type: object
+              properties:
+                issues:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      subject:
+                        type: string
+                        minLength: 4
+                        example: "Me mareo"
         required: true
       responses:
           200:
@@ -223,13 +260,12 @@ paths:
                 examples:
                   errorExample:
                     $ref: '#/components/examples/error404'
-
-
-
+      security:
+      - ApiKeyAuth: [] 
   /issues/{issueId}/comments:
   #revisar
     get:
-      tags:
+      tags: 
       - issues/comments
       summary: Find the comments corresponding to an Issue
       description: Returns all the comments of the specified Issue
@@ -259,7 +295,7 @@ paths:
                   errorExample:
                     $ref: '#/components/examples/error404'
       #security:
-      #- ApiKeyAuth: []
+      #- ApiKeyAuth: [] 
     post:
       tags:
       - issues/comments
@@ -311,11 +347,11 @@ paths:
                 errorExample:
                   $ref: '#/components/examples/error400'
       #security:
-      #- ApiKeyAuth: []
+      #- ApiKeyAuth: [] 
   /issues/{issueId}/activities:
   #revisar
     get:
-      tags:
+      tags: 
       - issues/activities
       summary: Find the activities corresponding to an Issue
       description: Returns all the activities of the specified Issue
@@ -346,7 +382,7 @@ paths:
                     $ref: '#/components/examples/error404'
   /issues/filter:
     get:
-      tags:
+      tags: 
       - issues/filters
       summary: Filtrar issues
       description: Filtra los issues según los parámetros proporcionados
@@ -392,7 +428,7 @@ paths:
                   $ref: '#/components/schemas/Issue'
   /issues/filter_by_name:
     get:
-      tags:
+      tags: 
       - issues/filters
       summary: Filtrar issues por nombre
       description: Filtra los issues que contienen el nombre proporcionado en el parámetro de consulta "name"
@@ -481,7 +517,7 @@ components:
           format: date-time
         blocked:
           type: boolean
-        blocked_reason:
+        blocked_reason: 
           type: string
           example: 'blocked reaon'
         watchers:
@@ -615,7 +651,7 @@ components:
     ErrorResult:
       type: object
       properties:
-        message:
+        message: 
           type: string
           example: 'Content is too long (maximum is 280 characters)'
       required:
@@ -639,9 +675,10 @@ components:
     UserNotFound:
       value:
         messaege: "There is no user with the indicated ID"
-
+        
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       name: Authorization
       in: header
+      
