@@ -5,7 +5,7 @@ info:
   description: "This is the Open API documentation for the REST API of our beloved application **Issues** deployed at <https://falta-link/>. <br>All operations are executable. All of the  operations requires authentication, you must **Authorize** your request by providing the token value you got when you created the tweet."
 servers:
   # Added by API Auto Mocking Plugin
-  - url: 'http://44.199.252.242:8080/'
+  - url: 'http://3.93.40.23:8080/'
 paths:
   /issues:
     get:
@@ -83,10 +83,10 @@ paths:
                 errorExample:
                   $ref: '#/components/examples/error400'
       security:
-      - ApiKeyAuth: [] 
+      - ApiKeyAuth: []
   /issues/{issueId}:
     get:
-      tags: 
+      tags:
       - issues
       summary: Finds an Issue by its ID
       description: Returns a single Issue
@@ -191,7 +191,7 @@ paths:
                   errorExample:
                     $ref: '#/components/examples/error404'
       security:
-      - ApiKeyAuth: [] 
+      - ApiKeyAuth: []
     delete:
       tags:
       - issues
@@ -220,7 +220,7 @@ paths:
                 errorExample:
                   $ref: '#/components/examples/error401'
       security:
-      - ApiKeyAuth: [] 
+      - ApiKeyAuth: []
   /issues/bulkForm:
     post:
       tags:
@@ -261,11 +261,11 @@ paths:
                   errorExample:
                     $ref: '#/components/examples/error404'
       security:
-      - ApiKeyAuth: [] 
+      - ApiKeyAuth: []
   /issues/{issueId}/comments:
   #revisar
     get:
-      tags: 
+      tags:
       - issues/comments
       summary: Find the comments corresponding to an Issue
       description: Returns all the comments of the specified Issue
@@ -294,8 +294,9 @@ paths:
                 examples:
                   errorExample:
                     $ref: '#/components/examples/error404'
-      #security:
-      #- ApiKeyAuth: [] 
+      security:
+      - ApiKeyAuth: []
+  /issues/{issueId}/newComments:
     post:
       tags:
       - issues/comments
@@ -317,7 +318,6 @@ paths:
               required:
               - content
               - issue_id
-              - user_id
               type: object
               properties:
                 content:
@@ -326,11 +326,7 @@ paths:
                 issue_id:
                   type: integer
                   format: int64
-                  example: 2
-                user_id:
-                  type: integer
-                  format: int64
-                  example: 2
+                  example: 3
         required: true
       responses:
         201:
@@ -346,12 +342,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error400'
-      #security:
-      #- ApiKeyAuth: [] 
+      security:
+      - ApiKeyAuth: []
   /issues/{issueId}/activities:
   #revisar
     get:
-      tags: 
+      tags:
       - issues/activities
       summary: Find the activities corresponding to an Issue
       description: Returns all the activities of the specified Issue
@@ -382,7 +378,7 @@ paths:
                     $ref: '#/components/examples/error404'
   /issues/filter:
     get:
-      tags: 
+      tags:
       - issues/filters
       summary: Filtrar issues
       description: Filtra los issues según los parámetros proporcionados
@@ -428,7 +424,7 @@ paths:
                   $ref: '#/components/schemas/Issue'
   /issues/filter_by_name:
     get:
-      tags: 
+      tags:
       - issues/filters
       summary: Filtrar issues por nombre
       description: Filtra los issues que contienen el nombre proporcionado en el parámetro de consulta "name"
@@ -517,7 +513,7 @@ components:
           format: date-time
         blocked:
           type: boolean
-        blocked_reason: 
+        blocked_reason:
           type: string
           example: 'blocked reaon'
         watchers:
@@ -651,7 +647,7 @@ components:
     ErrorResult:
       type: object
       properties:
-        message: 
+        message:
           type: string
           example: 'Content is too long (maximum is 280 characters)'
       required:
@@ -675,10 +671,10 @@ components:
     UserNotFound:
       value:
         messaege: "There is no user with the indicated ID"
-        
+
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       name: Authorization
       in: header
-      
+
