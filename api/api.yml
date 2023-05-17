@@ -65,6 +65,9 @@ paths:
                   minimum: 0
                   maximum: 6
                   example: 0
+                user_id:
+                  type: integer
+                  example: 1
         required: true
       responses:
         201:
@@ -128,18 +131,18 @@ paths:
       tags:
         - issues
       summary: Update an existing Issue with the new parameters passed
-      description: Update an existing pet by Id
+      description: Update an existing Issue by Id
       operationId: updateIssue
       parameters:
       - name: issueId
         in: path
-        description: ID of the Tweet to return
+        description: ID of the Issue to return
         required: true
         schema:
           type: integer
           format: int64
       requestBody:
-        description: Update an existent pet in the store
+        description: Update an existent Issue in the store
         content:
           application/json:
             schema:

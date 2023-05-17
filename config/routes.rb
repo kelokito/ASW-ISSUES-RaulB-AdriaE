@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   post '/issues/:id/newComments', to: 'comments#create', as: 'issue_new_comment'
 
+  get '/issues/filter', to: 'issues#filter', as: 'issues_filter'
+
   resources :issues do
     resources :comments
   end

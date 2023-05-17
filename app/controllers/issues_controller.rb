@@ -3,6 +3,7 @@ class IssuesController < ApplicationController
   before_action :authenticate_user, only: [:create, :destroy]
   before_action :set_issue, only: %i[ show sort edit update destroy dueDate updateDueDate block updateBlock unblock watchers updateWatchers assigned updateAssigned ]
   protect_from_forgery except: [:bulkCreate]
+  protect_from_forgery except: [:filter]
   protect_from_forgery except: [:filter_by_name]
   # GET /issues or /issues.json
   def index
@@ -53,6 +54,7 @@ class IssuesController < ApplicationController
   end
 
   def filter
+    @issues = Issue.all
     if !params[:filter_by_type].nil? && !params[:filter_by_type].empty?
       #@issues = Issues.where( typeIssue: params[:filter_by_type])
       @issues = @issues.where("typeIssue like ?", "#{params[:filter_by_type]}")
@@ -78,6 +80,9 @@ class IssuesController < ApplicationController
       @uid = User.find_by(full_name: params[:filter_by_createdBy]).id
       #@issues = Issues.where( createdBy: @uid)
       @issues = @issues.where("createdBy like ?", "#{@uid}")
+    end
+    respond_to do |format|
+      format.json { render json: @issues}
     end
   end
 
