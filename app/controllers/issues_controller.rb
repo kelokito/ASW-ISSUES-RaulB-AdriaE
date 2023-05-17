@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   include IssuesHelper
-  before_action :authenticate_user, only: [:create, :destroy, :update]
+  before_action :authenticate_user, only: [:create, :destroy]
   before_action :set_issue, only: %i[ show sort edit update destroy dueDate updateDueDate block updateBlock unblock watchers updateWatchers assigned updateAssigned ]
   protect_from_forgery except: [:bulkCreate]
   protect_from_forgery except: [:filter_by_name]
@@ -256,67 +256,93 @@ class IssuesController < ApplicationController
   # PATCH/PUT /issues/1 or /issues/1.json
   def update
     old_issue_params = @issue.attributes
+
     respond_to do |format|
       if @issue.update(issue_params)
-        @issue.updated_at=Time.zone.now
+        @issue.updated_at = Time.zone.now
         new_issue_params = @issue.attributes
 
-        #Comprovem nou titol
-        if old_issue_params['subject'] != new_issue_params['subject']
-          Activity.create(user_id: current_user.id, issue_id: @issue.id,
-            action:"Subject Update",
-            description:"#{old_issue_params['subject']}, changed to: #{new_issue_params['subject']}")
-        end
+        format.html do
+          user_id = current_user.id
 
-        #Comprovem nova descripcio
-        if old_issue_params['description'] != new_issue_params['description']
-          Activity.create(user_id: current_user.id, issue_id: @issue.id,
-            action:"Description Update",
-            description:"#{old_issue_params['description']}, changed to: #{new_issue_params['description']}")
-        end
-
-        #Comprovem nou tipus
-        if old_issue_params['typeIssue'] != new_issue_params['typeIssue']
-          types = ["Bug", "Question", "Enhancement", "To do"]
-          Activity.create(user_id: current_user.id, issue_id: @issue.id,
-            action:"Type Update",
-            description:"#{types[old_issue_params['typeIssue']]}, changed to: #{types[new_issue_params['typeIssue']]}")
-        end
-
-        #Comprovem nova severity
-        if old_issue_params['severityIssue'] != new_issue_params['severityIssue']
-          severity = ["Wishlist","Minor","Normal","Important","Critical"]
-          Activity.create(user_id: current_user.id, issue_id: @issue.id,
-            action:"Severity Update",
-            description:"#{severity[old_issue_params['severityIssue']]}, changed to: #{severity[new_issue_params['severityIssue']]}")
-        end
-
-        #Comprovem nova priority
-        if old_issue_params['priorityIssue'] != new_issue_params['priorityIssue']
-          priority = ["Low","Normal","High"]
-          Activity.create(user_id: current_user.id, issue_id: @issue.id,
-            action:"Priority Update",
-            description:"#{priority[old_issue_params['priorityIssue']]}, changed to: #{priority[new_issue_params['priorityIssue']]}")
-        end
-
-        #Comprovem nou status
-        if old_issue_params['statusIssue'] != new_issue_params['statusIssue']
-          status = ["New","In Progess","Ready for test","Closed","Needs info","Rejected","Postponed"]
-          Activity.create(user_id: current_user.id, issue_id: @issue.id,
-            action:"Status Update",
-            description:"#{status[old_issue_params['statusIssue']]}, changed to: #{status[new_issue_params['statusIssue']]}")
-        end
-
-
-        changes = ""
-        new_issue_params.each do |key, value|
-          if old_issue_params[key] != value
-            changes += "El atributo #{key} tiene el nuevo valor: #{value}. "
+          # Comprovem nou titol
+          if old_issue_params['subject'] != new_issue_params['subject']
+            create_activity(user_id, 'Subject Update', "#{old_issue_params['subject']}, changed to: #{new_issue_params['subject']}")
           end
+
+          # Comprovem nova descripcio
+          if old_issue_params['description'] != new_issue_params['description']
+            create_activity(user_id, 'Description Update', "#{old_issue_params['description']}, changed to: #{new_issue_params['description']}")
+          end
+
+          # Comprovem nou tipus
+          if old_issue_params['typeIssue'] != new_issue_params['typeIssue']
+            types = ["Bug", "Question", "Enhancement", "To do"]
+            create_activity(user_id, 'Type Update', "#{types[old_issue_params['typeIssue']]}, changed to: #{types[new_issue_params['typeIssue']]}")
+          end
+
+          # Comprovem nova severity
+          if old_issue_params['severityIssue'] != new_issue_params['severityIssue']
+            severity = ["Wishlist", "Minor", "Normal", "Important", "Critical"]
+            create_activity(user_id, 'Severity Update', "#{severity[old_issue_params['severityIssue']]}, changed to: #{severity[new_issue_params['severityIssue']]}")
+          end
+
+          # Comprovem nova priority
+          if old_issue_params['priorityIssue'] != new_issue_params['priorityIssue']
+            priority = ["Low", "Normal", "High"]
+            create_activity(user_id, 'Priority Update', "#{priority[old_issue_params['priorityIssue']]}, changed to: #{priority[new_issue_params['priorityIssue']]}")
+          end
+
+          # Comprovem nou status
+          if old_issue_params['statusIssue'] != new_issue_params['statusIssue']
+            status = ["New", "In Progress", "Ready for Test", "Closed", "Needs Info", "Rejected", "Postponed"]
+            create_activity(user_id, 'Status Update', "#{status[old_issue_params['statusIssue']]}, changed to: #{status[new_issue_params['statusIssue']]}")
+          end
+
+          # Resto de las comprobaciones de actualización...
+
+          redirect_to issues_url, notice: "Issue was successfully updated."
         end
-        puts "Changes: #{changes}"
-        format.html { redirect_to issues_url, notice: "Issue was successfully updated." }
-        format.json { render :index, status: :ok }
+
+        format.json do
+          user_id = getUserByApiKey.id
+
+          # Comprovem nou titol
+          if old_issue_params['subject'] != new_issue_params['subject']
+            create_activity(user_id, 'Subject Update', "#{old_issue_params['subject']}, changed to: #{new_issue_params['subject']}")
+          end
+
+          # Comprovem nova descripcio
+          if old_issue_params['description'] != new_issue_params['description']
+            create_activity(user_id, 'Description Update', "#{old_issue_params['description']}, changed to: #{new_issue_params['description']}")
+          end
+
+          # Comprovem nou tipus
+          if old_issue_params['typeIssue'] != new_issue_params['typeIssue']
+            types = ["Bug", "Question", "Enhancement", "To do"]
+            create_activity(user_id, 'Type Update', "#{types[old_issue_params['typeIssue']]}, changed to: #{types[new_issue_params['typeIssue']]}")
+          end
+
+          # Comprovem nova severity
+          if old_issue_params['severityIssue'] != new_issue_params['severityIssue']
+            severity = ["Wishlist", "Minor", "Normal", "Important", "Critical"]
+            create_activity(user_id, 'Severity Update', "#{severity[old_issue_params['severityIssue']]}, changed to: #{severity[new_issue_params['severityIssue']]}")
+          end
+
+          # Comprovem nova priority
+          if old_issue_params['priorityIssue'] != new_issue_params['priorityIssue']
+            priority = ["Low", "Normal", "High"]
+            create_activity(user_id, 'Priority Update', "#{priority[old_issue_params['priorityIssue']]}, changed to: #{priority[new_issue_params['priorityIssue']]}")
+          end
+
+          # Comprovem nou status
+          if old_issue_params['statusIssue'] != new_issue_params['statusIssue']
+            status = ["New", "In Progress", "Ready for Test", "Closed", "Needs Info", "Rejected", "Postponed"]
+            create_activity(user_id, 'Status Update', "#{status[old_issue_params['statusIssue']]}, changed to: #{status[new_issue_params['statusIssue']]}")
+          end
+
+          render :index, status: :ok
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @issue.errors, status: :unprocessable_entity }
@@ -356,6 +382,18 @@ class IssuesController < ApplicationController
     def issue_watchers_params
       params.require(:issue).permit(:watchers)
     end
+
+    def create_activity(user_id, action, description)
+      Activity.create(user_id: user_id, issue_id: @issue.id, action: action, description: description)
+    end
+
+
+    def getUserByApiKey
+      api_key = extract_api_key(request.headers['Authorization'])
+      @user = User.find_by(api_key: api_key)
+      return @user
+    end
+
 
     def authenticate_user
       if !api_key_present?

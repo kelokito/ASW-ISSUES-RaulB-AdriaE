@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   get '/issues/bulk', to: 'issues#bulk', as: 'bulk_issue'
   post '/issues/bulkForm', to: 'issues#bulkCreate', as: 'issues_bulkForm_post'
 
+  post '/issues/:id/newComments', to: 'comments#create', as: 'issue_new_comment'
+
   resources :issues do
     resources :comments
   end
