@@ -5,7 +5,7 @@ info:
   description: "This is the Open API documentation for the REST API of our beloved application **Issues** deployed at <https://falta-link/>. <br>All operations are executable. All of the  operations requires authentication, you must **Authorize** your request by providing the token value you got when you created the tweet."
 servers:
   # Added by API Auto Mocking Plugin
-  - url: 'http://3.93.40.23:8080/'
+  - url: 'http://3.235.230.222:8080/'
 paths:
   /issues:
     get:
@@ -65,9 +65,6 @@ paths:
                   minimum: 0
                   maximum: 6
                   example: 0
-                user_id:
-                  type: integer
-                  example: 1
         required: true
       responses:
         201:
@@ -176,6 +173,18 @@ paths:
                   minimum: 0
                   maximum: 6
                   example: 0
+                due_date:
+                  type: string
+                  format: date-time
+                blocked:
+                  type: boolean
+                  example: false
+                blocked_reason:
+                  type: string
+                  example: 'blocked reaon'
+                user_id:
+                  type: integer
+                  example: 1
         required: true
       responses:
         200:
@@ -446,55 +455,114 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Issue'
-  /watchers:
+  /issues/{issueId}/watchers:
     get:
       tags:
       - issues/watchers
-      summary: Obtener lista de issues
-      description: Devuelve una lista con la información de todos los watchers
+      summary: Find the watchers corresponding to an Issue
+      description: Returns all the watchers of the specified Issue
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Issue to return
+        required: true
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
-          description: Lista de issues
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Watcher'
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Comment'
+          404:
+            description: 'Error: Not Found'
+            content:
+              application/json:
+                examples:
+                  errorExample:
+                    $ref: '#/components/examples/error404'
+      security:
+      - ApiKeyAuth: []
     post:
       tags:
       - issues/watchers
-      summary: Crear un nuevo watcher
-      description: Crea un nuevo watcher con la información proporcionada
-      requestBody:
+      summary: A new user creates adds a new watcher in a specified issue
+      parameters:
+      - name: issueId
+        in: path
+        description: ID of the Issue to return
         required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Provide a valid issue_id to create a new Watcher on that Issue
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewWatcher'
+              required:
+              - issue_id
+              - user_id
+              type: object
+              properties:
+                issue_id:
+                  type: integer
+                  format: int64
+                  example: 3
+                user_id:
+                  type: integer
+                  format: int64
+                  example: 3
+        required: true
       responses:
-        '201':
-          description: Watcher creado exitosamente
+        201:
+          description: Watcher created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Watcher'
+                $ref: '#/components/schemas/NewWatcher'
+        400:
+          description: Something went wrong
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error400'
+      security:
+      - ApiKeyAuth: []
   /watchers/{watcherId}:
     delete:
       tags:
       - issues/watchers
-      summary: Eliminar un watcher
-      description: Elimina un watcher existente con el ID proporcionado
+      summary: A new user creates adds a new watcher in a specified issue
       parameters:
-        - in: path
-          name: watcherId
-          required: true
-          schema:
-            type: integer
-          description: ID del watcher a eliminar
+      - name: watcherId
+        in: path
+        description: ID of the Issue to return
+        required: true
+        schema:
+          type: integer
+          format: int64
       responses:
-        '204':
-          description: Watcher eliminado exitosamente
+        201:
+          description: Watcher created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewWatcher'
+        400:
+          description: Something went wrong
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error400'
+      security:
+      - ApiKeyAuth: []
 components:
   schemas:
     Issue:

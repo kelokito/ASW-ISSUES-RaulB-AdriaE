@@ -1,10 +1,35 @@
 class CommentsController < ApplicationController
   before_action :set_issue
+  before_action :authenticate_user, only: [:createJSON]
+
   #before_action :authenticate_user, only: [:create]
   #create a new comment for the issue from the curretn_user
   protect_from_forgery except: [:create]
 
   def create
+    @issue = Issue.find(params[:issue_id])
+    @comment = @issue.comments.create(comment_params)
+    respond_to do |format|
+      format.html do
+        @comment.user_id = current_user.id
+      end
+      format.json do
+        @comment.user_id = getUserByApiKey.id
+      end
+    end
+
+    respond_to do |format|
+      if @comment.save
+        format.html { redirect_to edit_issue_path(@issue), notice: 'Comment added successfully'}
+        format.json { render json: @comment, status: :created }
+      else
+        format.html { render 'issues/edit', alert: 'Error adding comment' }
+        format.json { render json: { error: 'Failed to create comment' }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def createJSON
     @issue = Issue.find(params[:issue_id])
     @comment = @issue.comments.create(comment_params)
     respond_to do |format|

@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   include IssuesHelper
-  before_action :authenticate_user, only: [:create, :destroy]
+  before_action :authenticate_user, only: [:create, :destroy, :update, :bulkCreate]
   before_action :set_issue, only: %i[ show sort edit update destroy dueDate updateDueDate block updateBlock unblock watchers updateWatchers assigned updateAssigned ]
   protect_from_forgery except: [:bulkCreate]
   protect_from_forgery except: [:filter]
@@ -81,14 +81,51 @@ class IssuesController < ApplicationController
       #@issues = Issues.where( createdBy: @uid)
       @issues = @issues.where("createdBy like ?", "#{@uid}")
     end
+  end
+
+  def filterJSON
+    @issues = Issue.all
+    if !params[:filter_by_type].nil? && !params[:filter_by_type].empty?
+      #@issues = Issues.where( typeIssue: params[:filter_by_type])
+      @issues = @issues.where("typeIssue like ?", "#{params[:filter_by_type]}")
+    end
+    if !params[:filter_by_severity].nil? && !params[:filter_by_severity].empty?
+      #@issues = Issues.where( severityIssue: params[:filter_by_severity])
+      @issues = @issues.where("severityIssue like ?", "#{params[:filter_by_severity]}")
+    end
+    if !params[:filter_by_priority].nil? && !params[:filter_by_priority].empty?
+      #@issues = Issues.where( priorityIssue: params[:filter_by_priority])
+      @issues = @issues.where("priorityIssue like ?", "#{params[:filter_by_priority]}")
+    end
+    if !params[:filter_by_status].nil? && !params[:filter_by_status].empty?
+      #@issues = Issues.where( statusIssue: params[:filter_by_status])
+      @issues = @issues.where("statusIssue like ?", "#{params[:filter_by_status]}")
+    end
+    if !params[:filter_by_assign].nil? && !params[:filter_by_assign].empty?
+      @uid = User.find_by(full_name: params[:filter_by_assign]).id
+      #@issues = Issues.where( user_id: @uid)
+      @issues = @issues.where("user_id like ?", "#{@uid}")
+    end
+    if !params[:filter_by_createdBy].nil? && !params[:filter_by_createdBy].empty?
+      @uid = User.find_by(full_name: params[:filter_by_createdBy]).id
+      #@issues = Issues.where( createdBy: @uid)
+      @issues = @issues.where("createdBy like ?", "#{@uid}")
+    end
     respond_to do |format|
+      format.html
       format.json { render json: @issues}
     end
   end
 
+
+
   def filter_by_name
+    @issues = Issue.all
     if params[:subject]
       @issues = @issues.where("subject like ?", "%#{params[:subject]}%")
+    end
+    respond_to do |format|
+      format.json { render json: @issues}
     end
   end
 
@@ -241,6 +278,7 @@ class IssuesController < ApplicationController
   end
 
 
+
   # POST /issues or /issues.json
   def create
     @issue = Issue.new(issue_params)
@@ -250,7 +288,7 @@ class IssuesController < ApplicationController
     respond_to do |format|
       if @issue.save
         format.html { redirect_to issues_url, notice: "Issue was successfully created." }
-        format.json { render :index, status: :created }
+        format.json { render json: @issue }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @issue.errors, status: :unprocessable_entity }
@@ -345,8 +383,41 @@ class IssuesController < ApplicationController
             status = ["New", "In Progress", "Ready for Test", "Closed", "Needs Info", "Rejected", "Postponed"]
             create_activity(user_id, 'Status Update', "#{status[old_issue_params['statusIssue']]}, changed to: #{status[new_issue_params['statusIssue']]}")
           end
+          #comparem due_date
+          new_due_date = params[:due_date]
+          old_due_date = old_issue_params['due_date']
+          if new_due_date != old_due_date
+            @issue.update(due_date: new_due_date)
+            #create_activity(user_id, 'Due Date Update', "#{old_due_date}, changed to: #{new_due_date}")
+          end
+          puts old_issue_params["due_date"]
+          puts params[:due_date]
 
-          render :index, status: :ok
+          #comparem blocked
+          new_blocked = params[:blocked]
+          old_blocked = old_issue_params['blocked']
+          if new_blocked != old_blocked
+            @issue.update(blocked: new_blocked)
+            create_activity(user_id, 'Blocked Update', "#{old_blocked}, changed to: #{new_blocked}")
+          end
+          #comparem blocked_reason
+          new_blocked_reason = params[:blocked_reason]
+          old_blocked_reason = old_issue_params['blocked_reason']
+          if new_blocked_reason != old_blocked_reason
+            @issue.update(blocked_reason: new_blocked_reason)
+            create_activity(user_id, 'Blocked Reason Update', "#{old_blocked_reason}, changed to: #{new_blocked_reason}")
+          end
+
+          #comparem user_id
+          new_user_id = params[:user_id]
+          old_user_id = old_issue_params['user_id']
+          if new_user_id != old_user_id
+            @issue.update(user_id: new_user_id)
+            create_activity(user_id, 'Assigned Update', "#{old_user_id}, changed to: #{new_user_id}")
+          end
+
+
+          render json: @issue
         end
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -398,7 +469,6 @@ class IssuesController < ApplicationController
       @user = User.find_by(api_key: api_key)
       return @user
     end
-
 
     def authenticate_user
       if !api_key_present?

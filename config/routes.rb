@@ -3,9 +3,14 @@ Rails.application.routes.draw do
   get '/issues/bulk', to: 'issues#bulk', as: 'bulk_issue'
   post '/issues/bulkForm', to: 'issues#bulkCreate', as: 'issues_bulkForm_post'
 
-  post '/issues/:id/newComments', to: 'comments#create', as: 'issue_new_comment'
+  post '/issues/:id/newComments', to: 'comments#createJSON', as: 'issue_new_comment'
 
-  get '/issues/filter', to: 'issues#filter', as: 'issues_filter'
+  get '/issues/filter', to: 'issues#filterJSON', as: 'issues_filterJSON'
+  get '/issues/filter_by_name', to: 'issues#filter_by_name', as: 'issues_filterByName'
+
+  get '/issues/:id/watchers', to: 'watchers#index', as: 'issues_watchers'
+  post '/issues/:id/watchers', to: 'watchers#create', as: 'issues_new_watchers'
+  delete 'issues/:id/watchers/:id', to: 'watchers#destroy', as: 'issues_delete_watchers'
 
   resources :issues do
     resources :comments
